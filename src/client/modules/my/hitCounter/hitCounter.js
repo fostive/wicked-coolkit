@@ -1,5 +1,4 @@
-import { LightningElement } from 'lwc';
-import { apiUrl } from '../../../api';
+import { LightningElement, api } from 'lwc';
 
 const DIGIT_COUNT = 8;
 
@@ -13,13 +12,15 @@ export default class HitCounter extends LightningElement {
     digit7 = '?';
     digit8 = '?';
 
+    @api host = '';
+
     connectedCallback() {
         this.postCount();
     }
 
     async fetchCount() {
         const res = await fetch(
-            `${apiUrl()}/hitCounter?site=${window.location.host}`
+            `${this.host}/hitCounter?site=${window.location.host}`
         );
         const { count } = await res.json();
         this.renderCount(count);
@@ -27,7 +28,7 @@ export default class HitCounter extends LightningElement {
 
     async postCount() {
         const res = await fetch(
-            `${apiUrl()}/hitCounter?site=${window.location.host}`,
+            `${this.host}/hitCounter?site=${window.location.host}`,
             {
                 method: 'POST'
             }
