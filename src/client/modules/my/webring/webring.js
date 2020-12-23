@@ -1,17 +1,18 @@
 import { LightningElement, api } from 'lwc';
+import DEFAULT_HOST from '../../../host';
 
 export default class Webring extends LightningElement {
     name = null;
     description = null;
 
-    @api host = '';
+    @api host = DEFAULT_HOST;
 
     get prevHref() {
-        return `${this.host}/webring/prev`;
+        return `${this.host}/api/webring/prev`;
     }
 
     get nextHref() {
-        return `${this.host}/webring/next`;
+        return `${this.host}/api/webring/next`;
     }
 
     connectedCallback() {
@@ -19,7 +20,7 @@ export default class Webring extends LightningElement {
     }
 
     async fetchData() {
-        const res = await fetch(`${this.host}/webring`);
+        const res = await fetch(`${this.host}/api/webring`);
         const { name, description } = await res.json();
 
         this.name = name;

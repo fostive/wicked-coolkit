@@ -1,4 +1,5 @@
 import { LightningElement, api } from 'lwc';
+import DEFAULT_HOST from '../../../host';
 
 export default class TradingCard extends LightningElement {
     displayName = null;
@@ -7,7 +8,7 @@ export default class TradingCard extends LightningElement {
     link = null;
     strengths = null;
 
-    @api host = '';
+    @api host = DEFAULT_HOST;
 
     _stickers = [];
     get stickers() {

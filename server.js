@@ -75,6 +75,14 @@ app.get(
             )
             .then(({ records }) => records);
 
+        const website = await sf
+            .query(
+                `SELECT Name, URL__c
+                FROM Website__c
+                WHERE Id = '${contact.Main_Website__c}'`
+            )
+            .then(({ records }) => records[0]);
+
         return res.json({
             name: contact.Name,
             email: contact.Email,
@@ -83,7 +91,7 @@ app.get(
             strengths: contact.Feats_of_Strength__c.split(',')
                 .map((t) => t.trim())
                 .filter(Boolean),
-            link: contact.Main_Website__c,
+            link: website.URL__c,
             twitter: contact.Twitter_Username__c,
             codepen: contact.Codepen_Username__c,
             instagram: contact.Instagram_Username__c,
