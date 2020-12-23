@@ -75,8 +75,6 @@ app.get(
             )
             .then(({ records }) => records);
 
-        console.log(stickers);
-
         return res.json({
             name: contact.Name,
             email: contact.Email,
