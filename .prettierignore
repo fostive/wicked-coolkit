@@ -6,6 +6,3 @@ lib/
 
 # Default dist folder
 dist/
-
-# Default resources folder
-src/client/resources
