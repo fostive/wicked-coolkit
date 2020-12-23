@@ -4,5 +4,9 @@
         "host": "localhost",
         "port": 5432
     },
+    "host": {
+        "name": "localhost",
+        "port": 3002
+    },
     "sites": ["localhost:3001"]
 }

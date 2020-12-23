@@ -6,7 +6,8 @@ import replace from '@rollup/plugin-replace';
 export default {
     input: {
         tradingCard: './src/trading-card.js',
-        hitCounter: './src/hit-counter.js'
+        hitCounter: './src/hit-counter.js',
+        webring: './src/webring.js'
     },
     output: {
         dir: './dist',

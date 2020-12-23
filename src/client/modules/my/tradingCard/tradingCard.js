@@ -1,38 +1,23 @@
 import { LightningElement } from 'lwc';
+import { apiUrl } from '../../../api';
 
 export default class TradingCard extends LightningElement {
-    imgSrc = './resources/images/trading-card-placeholder.jpg';
-    displayName = 'Lynn Fisher';
-    description = 'A designer and CSS developer making weird web projects';
+    displayName = null;
+    description = null;
+    imgSrc = null;
+    link = null;
+    strengths = null;
 
-    strengths = ['CSS', 'HTML', 'design', 'illustration', 'obscure trivia'];
-
-    _stickers = [
-        'design',
-        'css',
-        'dogs',
-        'flags',
-        'puzzles',
-        'film&tv',
-        'music',
-        'baking',
-        'visual-arts',
-        'tabletop-games',
-        'performing-arts',
-        'html'
-    ];
+    _stickers = [];
     get stickers() {
         return this._stickers.map((sticker) => ({
-            id: sticker,
-            href: '#',
-            imgSrc: `./resources/images/stickers/${sticker}.svg`,
-            imgAlt: sticker
+            id: sticker.id,
+            href: `${apiUrl()}/sticker/?id=${sticker.id}`,
+            imgSrc: `./resources/images/stickers/${sticker.src}.svg`,
+            imgAlt: sticker.alt || sticker.src
         }));
     }
 
-    link = 'https://lynnandtonic.com';
-
-    _email = 'lynn@andyet.com';
     get email() {
         if (this._email) {
             return `mailto:${this._email}`;
@@ -40,7 +25,6 @@ export default class TradingCard extends LightningElement {
         return false;
     }
 
-    _twitter = 'lynnandtonic';
     get twitter() {
         if (this._twitter) {
             return `https://twitter.com/${this._twitter}`;
@@ -48,7 +32,6 @@ export default class TradingCard extends LightningElement {
         return false;
     }
 
-    _codepen = 'lynnandtonic';
     get codepen() {
         if (this._codepen) {
             return `https://codepen.io/${this._codepen}`;
@@ -56,7 +39,6 @@ export default class TradingCard extends LightningElement {
         return false;
     }
 
-    _github = 'lynnandtonic';
     get github() {
         if (this._github) {
             return `https://github.com/${this._github}`;
@@ -64,7 +46,6 @@ export default class TradingCard extends LightningElement {
         return false;
     }
 
-    _linkedin = 'lynnandtonic';
     get linkedin() {
         if (this._linkedin) {
             return `https://www.linkedin.com/in/${this._linkedin}`;
@@ -72,11 +53,48 @@ export default class TradingCard extends LightningElement {
         return false;
     }
 
-    _instagram = 'lynnandtonic';
     get instagram() {
         if (this._instagram) {
             return `https://www.instagram.com/${this._instagram}`;
         }
         return false;
+    }
+
+    connectedCallback() {
+        this.fetchCard();
+    }
+
+    async fetchCard() {
+        const res = await fetch(`${apiUrl()}/tradingCard`);
+        const {
+            name,
+            email,
+            bio,
+            link,
+            img,
+            twitter,
+            codepen,
+            instagram,
+            github,
+            linkedin,
+            stickers,
+            strengths
+        } = await res.json();
+
+        this.displayName = name;
+        this.description = bio;
+        this.imgSrc = img;
+        this.strengths = strengths;
+
+        this.link = link;
+
+        this._email = email;
+        this._twitter = twitter;
+        this._codepen = codepen;
+        this._instagram = instagram;
+        this._github = github;
+        this._linkedin = linkedin;
+
+        this._stickers = stickers;
     }
 }

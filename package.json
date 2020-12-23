@@ -10,6 +10,7 @@
         "express": "^4.17.1",
         "getconfig": "^4.5.0",
         "helmet": "^4.2.0",
+        "jsforce": "^1.10.1",
         "knex": "^0.21.12",
         "pg": "^8.5.1"
     },
@@ -63,8 +64,10 @@
     },
     "repository": "Luke Karrys/heroku-wicked-coolkit",
     "scripts": {
-        "build": "lwc-services build -m production",
+        "build": "run-s build:production compile",
         "build:development": "lwc-services build",
+        "build:production": "lwc-services build -m production",
+        "compile": "rollup -c",
         "lint": "eslint ./src/**/*.js",
         "prettier": "prettier --write \"**/*.{css,html,js,json,md,ts,yaml,yml}\"",
         "prettier:verify": "prettier --list-different \"**/*.{css,html,js,json,md,ts,yaml,yml}\"",
@@ -75,7 +78,6 @@
         "test:unit:watch": "lwc-services test:unit --watch",
         "watch": "run-p watch:client watch:server",
         "watch:client": "lwc-services watch",
-        "watch:server": "nodemon",
-        "compile": "rollup -c"
+        "watch:server": "nodemon"
     }
 }
