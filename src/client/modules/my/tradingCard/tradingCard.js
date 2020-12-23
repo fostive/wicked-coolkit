@@ -1,5 +1,4 @@
-import { LightningElement } from 'lwc';
-import { apiUrl } from '../../../api';
+import { LightningElement, api } from 'lwc';
 
 export default class TradingCard extends LightningElement {
     displayName = null;
@@ -8,11 +7,13 @@ export default class TradingCard extends LightningElement {
     link = null;
     strengths = null;
 
+    @api host = '';
+
     _stickers = [];
     get stickers() {
         return this._stickers.map((sticker) => ({
             id: sticker.id,
-            href: `${apiUrl()}/sticker/?id=${sticker.id}`,
+            href: `${this.host}/api/sticker/?id=${sticker.id}`,
             imgSrc: `./resources/images/stickers/${sticker.src}.svg`,
             imgAlt: sticker.alt || sticker.src
         }));
@@ -65,7 +66,7 @@ export default class TradingCard extends LightningElement {
     }
 
     async fetchCard() {
-        const res = await fetch(`${apiUrl()}/tradingCard`);
+        const res = await fetch(`${this.host}/api/tradingCard`);
         const {
             name,
             email,
