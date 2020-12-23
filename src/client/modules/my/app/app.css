@@ -1,6 +1,6 @@
 header {
     width: 100%;
-    height: 220px;
+    height: 180px;
     display: grid;
     place-content: center;
     background-repeat: no-repeat;
@@ -17,74 +17,25 @@ header {
 
 main {
     box-sizing: border-box;
-    max-width: 1200px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 30px;
     padding-bottom: 4em;
-    display: grid;
-    grid-column-gap: 30px;
-    grid-row-gap: 50px;
     background-image: linear-gradient(225deg, transparent 4em, #f6f0e2 4em);
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 840px) {
     main {
         margin: 0 20px;
     }
 }
 
-@media screen and (min-width: 801px) and (max-width: 1200px) {
-    main {
-        width: 90%;
-        max-width: 800px;
-        grid-template-columns: 1fr 1.3fr;
-    }
-
-    .trading-card-content {
-        margin-top: 2em;
-    }
-
-    .trading-card {
-        grid-column: 2;
-        grid-row: 2 / 4;
-    }
-
-    .stickers {
-        grid-row: 3;
-    }
-}
-
-@media screen and (min-width: 1201px) {
-    main {
-        width: 90%;
-        max-width: 1200px;
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .trading-card-content {
-        align-self: center;
-    }
-
-    .trading-card {
-        grid-column: 2 / -1;
-    }
-
-    .stickers {
-        grid-column: 3;
-    }
-
-    .hit-counter,
-    .webring {
-        grid-row: 3;
-    }
-}
-
 h2 {
-    font-size: 1.4em;
+    font-size: 1em;
 }
 
 p {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     font-weight: normal;
 }
 
@@ -111,127 +62,21 @@ p {
     margin-left: 12px;
 }
 
-p.intro {
-    grid-column: 1 / -1;
-    margin: 0 3em 0 0;
+.landing-intro {
+    margin: 0 3em 2em 0;
     font-weight: bold;
     font-size: 1.1em;
 }
 
-.intro small {
-    margin-top: 0.5em;
-    font-weight: normal;
-    display: block;
+.landing-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 30px;
 }
 
-.emoji {
-    margin: 0 4px 0 6px;
-    display: inline-block;
-}
-
-.arrow img {
-    width: auto;
-}
-
-/* Trading card content */
-
-.trading-card-content {
-    position: relative;
-}
-.trading-card-content .arrow {
-    display: flex;
-    justify-content: flex-end;
-}
-.trading-card-content .bolts {
-    margin: 15px 0 0 8px;
-}
-
-@media screen and (max-width: 800px) {
-    .trading-card-content .arrow {
-        position: absolute;
-        bottom: 50px;
-        right: 70px;
-    }
-    .trading-card-content .arrow img {
-        transform: rotate(-120deg) scale(1.5);
-    }
-}
-
-@media screen and (min-width: 801px) {
-    .trading-card-content .arrow img {
-        margin-bottom: 20px;
-        transform: rotate(150deg) scale(1.5);
-    }
-}
-
-@media screen and (min-width: 1201px) {
-    .trading-card-content .arrow svg {
-        margin-right: 20px;
-    }
-}
-
-/* Trading card */
-
-.trading-card {
-    margin-bottom: 3em;
-}
-
-/*@media screen and (max-width: 500px) {
-    .trading-card {
-        transform: scale(.7);
-    }
-}*/
-
-/* Hit counter + webring content */
-
-@media screen and (min-width: 801px) {
-    .hit-counter .container,
-    .webring .container {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        align-items: flex-start;
-    }
-
-    .hit-counter .container {
-        height: 110px;
-        padding-bottom: 4px;
-    }
-
-    .webring .container img {
-        height: 114px;
-    }
-}
-
-/* Sticker content */
-
-.stickers .container {
-    display: flex;
-    justify-content: flex-end;
-    height: 114px;
-}
-.stickers .arrow img {
-    margin-bottom: 20px;
-    transform: rotate(70deg) scale(1.5);
-}
-.stickers .bolts {
-    margin-left: 20px;
-}
-.stickers .sticker {
-    width: 120px;
-}
-.stickers .sticker:first-of-type {
-    transform: rotate(-5deg) translateY(-15px);
-}
-.stickers .sticker:nth-of-type(2) {
-    transform: rotate(20deg);
-}
-
-@media screen and (min-width: 801px) and (max-width: 1200px) {
-    .stickers .container {
-        justify-content: flex-start;
-    }
-    .stickers .arrow {
-        display: none;
-    }
+.landing-options .image {
+    height: 200px;
+    border: 1px solid #1e1e60;
+    display: grid;
+    place-content: center;
 }
