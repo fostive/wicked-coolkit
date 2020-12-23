@@ -6,7 +6,6 @@ const config = require('getconfig');
 const cors = require('cors');
 const path = require('path');
 const jsforce = require('jsforce');
-const fs = require('fs').promises;
 
 const pg = require('knex')({
     client: 'pg',
@@ -171,20 +170,6 @@ app.post(
         return res.json(hits);
     })
 );
-
-// TODO: remove this once it gets moved to cdn
-app.get('/api.js', async (req, res) => {
-    const distFiles = await fs.readdir(path.resolve(DIST_DIR));
-    console.log(distFiles);
-    const api = distFiles.find(
-        (f) => f.startsWith('api-') && f.endsWith('.js')
-    );
-    console.log(api);
-    if (api) {
-        return res.sendFile(path.resolve(DIST_DIR, api));
-    }
-    res.json({ distFiles, api });
-});
 
 app.use('*', (req, res) => {
     res.sendFile(path.resolve(DIST_DIR, 'index.html'));
