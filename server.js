@@ -56,15 +56,9 @@ app.get(
 app.get(
     '/api/tradingCard',
     apiHandler(async (req, res) => {
-        // TODO: add codepen, link, img, strengths to schema
-        // Image_src__c
-        // Codepen_URL__c
-        // Link_URL__c
-        // Image_src__c
-        // Strengths__c (array or a separate association)
         const contact = await sf
             .query(
-                `SELECT Id, Name, Email, Bio__c, Twitter_URL__c, Instagram_URL__c, GitHub_URL__c, LinkedIn_URL__c
+                `SELECT Id, Name, Email, Bio__c, Photo_URL__c, Feats_of_Strength__c, Main_Website__c, Twitter_Username__c, Instagram_Username__c, GitHub_Username__c, LinkedIn_Username__c, CodePen_Username__c
                 FROM Contact
                 LIMIT 1`
             )
@@ -79,48 +73,24 @@ app.get(
                 FROM Contact_Sticker_Association__c
                 WHERE Contact__c = '${contact.Id}')`
             )
-            .then(
-                ({ records }) => records,
-                // TODO: this fails for now so just return a static list of stickers
-                (err) => {
-                    console.log(err);
-                    return [
-                        { src: 'design', id: 1 },
-                        { src: 'css', id: 2 },
-                        { src: 'dogs', id: 3 },
-                        { src: 'flags', id: 4 },
-                        { src: 'puzzles', id: 5 },
-                        { src: 'film&tv', id: 6 },
-                        { src: 'music', id: 7 },
-                        { src: 'baking', id: 8 },
-                        { src: 'visual-arts', id: 9 },
-                        { src: 'tabletop-games', id: 10 },
-                        { src: 'performing-arts', id: 11 },
-                        { src: 'html', id: 12 }
-                    ];
-                }
-            );
+            .then(({ records }) => records);
+
+        console.log(stickers);
 
         return res.json({
             name: contact.Name,
             email: contact.Email,
-            img:
-                contact.Image_src__c ||
-                './resources/images/trading-card-placeholder.jpg',
-            strengths: contact.Strengths__c || [
-                'CSS',
-                'HTML',
-                'design',
-                'illustration',
-                'obscure trivia'
-            ],
             bio: contact.Bio__c,
-            link: contact.Link_URL__c,
-            twitter: contact.Twitter_URL__c,
-            codepen: contact.Codepen_URL__c,
-            instagram: contact.Instagram_URL__c,
-            github: contact.GitHub_URL__c,
-            linkedin: contact.LinkedIn_URL__c,
+            img: contact.Photo_URL__c,
+            strengths: contact.Feats_of_Strength__c.split(',')
+                .map((t) => t.trim())
+                .filter(Boolean),
+            link: contact.Main_Website__c,
+            twitter: contact.Twitter_Username__c,
+            codepen: contact.Codepen_Username__c,
+            instagram: contact.Instagram_Username__c,
+            github: contact.GitHub_Username__c,
+            linkedin: contact.LinkedIn_Username__c,
             stickers
         });
     })
