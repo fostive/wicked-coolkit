@@ -1,10 +1,7 @@
 import { LightningElement } from 'lwc';
+import { apiUrl } from '../../../api';
 
 const DIGIT_COUNT = 8;
-const API = () =>
-    window.PRODUCTION
-        ? `${window.location.protocol}//${window.location.host}/api`
-        : `http://localhost:3002/api`;
 
 export default class HitCounter extends LightningElement {
     digit1 = '?';
@@ -22,7 +19,7 @@ export default class HitCounter extends LightningElement {
 
     async fetchCount() {
         const res = await fetch(
-            `${API()}/hitCounter?site=${window.location.host}`
+            `${apiUrl()}/hitCounter?site=${window.location.host}`
         );
         const { count } = await res.json();
         this.renderCount(count);
@@ -30,7 +27,7 @@ export default class HitCounter extends LightningElement {
 
     async postCount() {
         const res = await fetch(
-            `${API()}/hitCounter?site=${window.location.host}`,
+            `${apiUrl()}/hitCounter?site=${window.location.host}`,
             {
                 method: 'POST'
             }

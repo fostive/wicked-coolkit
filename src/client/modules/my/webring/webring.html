@@ -2,13 +2,11 @@
     <div class="container">
         <div class="webring light-mode">
             <div class="description">
-                <a href="" class="home">My cool webring</a>
-                <span
-                    >This is a webring about cool stuff and other things!</span
-                >
+                <a href="" class="home">{name}</a>
+                <span>{description}</span>
             </div>
             <nav>
-                <a href="" class="previous"
+                <a href={prevHref} class="previous"
                     ><svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="12"
@@ -26,7 +24,7 @@
                     </svg>
                     Previous</a
                 >
-                <a href="" class="next"
+                <a href={nextHref} class="next"
                     >Next
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
