@@ -175,10 +175,15 @@ app.post(
 // TODO: remove this once it gets moved to cdn
 app.get('/api.js', async (req, res) => {
     const distFiles = await fs.readdir(path.resolve(DIST_DIR));
+    console.log(distFiles);
     const api = distFiles.find(
         (f) => f.startsWith('api-') && f.endsWith('.js')
     );
-    res.sendFile(path.resolve(DIST_DIR, api));
+    console.log(api);
+    if (api) {
+        return res.sendFile(path.resolve(DIST_DIR, api));
+    }
+    res.json({ distFiles, api });
 });
 
 app.use('*', (req, res) => {
