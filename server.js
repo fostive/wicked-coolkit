@@ -14,7 +14,7 @@ const pg = require('knex')({
 
 const sf = new jsforce.Connection({
     // you can change loginUrl to connect to sandbox or prerelease env.
-    loginUrl: 'https://test.salesforce.com'
+    loginUrl: config.salesforce.url
 });
 
 const HOST = config.host.name;

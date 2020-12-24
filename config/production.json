@@ -7,6 +7,7 @@
     },
     "salesforce": {
         "username": "$SALESFORCE_USER",
-        "password": "$SALESFORCE_PASSWORD"
+        "password": "$SALESFORCE_PASSWORD",
+        "url": "$SALESFORCE_URL"
     }
 }
