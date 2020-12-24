@@ -151,7 +151,7 @@ img {
     width: 100%;
     display: grid;
     grid-gap: 1.6em;
-    grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 
 /*@media screen and (min-width: 750px) {
@@ -165,7 +165,7 @@ img {
 .trading-card .front,
 .trading-card .back {
     max-width: 380px;
-    min-height: 450px;
+    min-height: 500px;
     padding: 0.7em;
     border: 2px solid #1e1e60;
     box-shadow: 0.4em 0.4em 0 #1e1e60;
@@ -233,6 +233,7 @@ img {
 .dev-img img {
     min-width: 100%;
     min-height: 100%;
+    object-fit: cover;
     display: block;
     vertical-align: middle;
     position: absolute;
@@ -244,7 +245,7 @@ img {
 ------------------------*/
 
 .contact-links {
-    margin: -0.9em 1.5em -0.7em auto;
+    margin: -0.9em 0.5em -0.7em auto;
     padding-left: 0.5em;
     padding-right: 0.4em;
     display: flex;
@@ -338,19 +339,24 @@ img {
 ------------------------*/
 
 .back {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    align-content: start;
-    align-items: start;
+    display: flex;
+    justify-content: space-around;
+    align-content: space-around;
+    flex-wrap: wrap;
 }
 
 .sticker {
     transition: transform 200ms ease-in-out;
+    width: 100px;
 }
 
 .sticker:first-child,
 .sticker:nth-child(8) {
     transform: rotate(-5deg);
+}
+
+.sticker:nth-child(3) {
+    transform: rotate(5deg);
 }
 
 .sticker:nth-child(2),
