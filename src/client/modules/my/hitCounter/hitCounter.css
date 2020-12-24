@@ -5,6 +5,7 @@
     box-sizing: border-box;
     width: 100%;
     display: flex;
+    padding: 10px;
 }
 
 /* Hit Counter
