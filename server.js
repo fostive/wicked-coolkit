@@ -77,7 +77,7 @@ app.get(
 
         const website = await sf
             .query(
-                `SELECT Name, URL__c
+                `SELECT URL__c
                 FROM Website__c
                 WHERE Id = '${contact.Main_Website__c}'`
             )
@@ -97,7 +97,11 @@ app.get(
             instagram: contact.Instagram_Username__c,
             github: contact.GitHub_Username__c,
             linkedin: contact.LinkedIn_Username__c,
-            stickers
+            stickers: stickers.map((sticker) => ({
+                id: sticker.Id,
+                path: sticker.Image_URL__c,
+                name: sticker.Name
+            }))
         });
     })
 );
@@ -105,32 +109,41 @@ app.get(
 app.get(
     '/api/sticker',
     apiHandler(async (req, res) => {
-        const webringId = await sf
-            .query(
-                `SELECT Id
+        try {
+            const webringId = await sf
+                .query(
+                    `SELECT Id
                 FROM Webring__c
-                WHERE Sticker = '${req.query.id}'`
-            )
-            .then(({ records }) => records[0].Id);
+                WHERE Sticker__c = '${req.query.id}'`
+                )
+                .then(({ records }) => records[0].Id);
 
-        const randomWebsite = await sf
-            .query(
-                `SELECT Id, Name, URL__c
+            const randomWebsite = await sf
+                .query(
+                    `SELECT URL__c
                 FROM Website__c
                 WHERE Id IN
                 (SELECT Website__c
                 FROM Website_Webring_Association__c
                 WHERE Webring__c = '${webringId}')`
-            )
-            .then(({ records }) => random(records));
+                )
+                .then(({ records }) => random(records));
 
-        res.redirect(randomWebsite.URL__c);
+            res.redirect(randomWebsite.URL__c);
+        } catch (e) {
+            res.json({
+                error:
+                    'There are either no webrings or websites for that sticker'
+            });
+        }
     })
 );
 
 app.get(
     '/api/webring',
     apiHandler(async (req, res) => {
+        // TODO: fix this with the correct query
+        // https://github.com/crcastle/weirdos-salesforce-app/issues/4
         res.json({
             name: 'My cool webring!',
             description: 'This is a webring about cool stuff and other things!'
@@ -149,7 +162,7 @@ const randomWebring = apiHandler(async (req, res) => {
 
     const randomWebsite = await sf
         .query(
-            `SELECT Id, Name, URL__c
+            `SELECT URL__c
             FROM Website__c
             WHERE Contact__c = '${contact.Id}'`
         )
