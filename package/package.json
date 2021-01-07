@@ -1,0 +1,9 @@
+{
+    "name": "heroku-wicked-coolkit",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {},
+    "keywords": [],
+    "author": "Salesforce",
+    "license": "MIT"
+}

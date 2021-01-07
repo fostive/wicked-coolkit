@@ -32,6 +32,11 @@
         "npm": ">=6.4.1",
         "yarn": ">=1.9.4"
     },
+    "files": [
+        "dist/hitCounter.js",
+        "dist/tradingCard.js",
+        "dist/webring.js"
+    ],
     "homepage": "https://github.com/Luke Karrys/heroku-wicked-coolkit",
     "husky": {
         "hooks": {

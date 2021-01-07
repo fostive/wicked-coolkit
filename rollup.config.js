@@ -9,10 +9,16 @@ export default {
         hitCounter: './src/hit-counter.js',
         webring: './src/webring.js'
     },
-    output: {
-        dir: './dist',
-        format: 'esm'
-    },
+    output: [
+        {
+            dir: './dist',
+            format: 'esm'
+        },
+        {
+            dir: './package',
+            format: 'esm'
+        }
+    ],
     plugins: [
         resolve({ browser: true }),
         lwcCompiler({
