@@ -76,6 +76,7 @@
         "lint": "eslint ./src/**/*.js",
         "prettier": "prettier --write \"**/*.{css,html,js,json,md,ts,yaml,yml}\"",
         "prettier:verify": "prettier --list-different \"**/*.{css,html,js,json,md,ts,yaml,yml}\"",
+        "publish-package": "./scripts/publish.sh",
         "serve": "node server.js",
         "test:unit": "lwc-services test:unit",
         "test:unit:coverage": "lwc-services test:unit --coverage",
