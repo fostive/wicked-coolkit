@@ -177,10 +177,14 @@ app.get('/api/webring/next', randomWebring);
 app.post(
     '/api/hitCounter',
     apiHandler(async (req, res) => {
-        await pg
+        const updated = await pg
             .increment('count')
             .from('hit_counter')
             .where({ site: req.query.site });
+
+        if (updated === 0) {
+            await pg('hit_counter').insert({ site: req.query.site, count: 1 });
+        }
 
         const hits = await pg
             .select('site', 'count')
@@ -195,17 +199,6 @@ app.post(
 app.use('*', (req, res) => {
     res.sendFile(path.resolve(DIST_DIR, 'index.html'));
 });
-
-const setupDb = async () => {
-    await Promise.all(
-        config.sites.map((site) =>
-            pg('hit_counter')
-                .insert({ site, count: 0 })
-                .onConflict('site')
-                .ignore()
-        )
-    );
-};
 
 const setupSalesforce = async () => {
     const result = await sf.login(
@@ -222,7 +215,7 @@ const setupSalesforce = async () => {
 };
 
 const main = async () => {
-    await Promise.all([setupSalesforce(), setupDb()]);
+    await setupSalesforce();
     app.listen(PORT, () => {
         console.log(`✅  API Server started: http://${HOST}:${PORT}/`);
     });
