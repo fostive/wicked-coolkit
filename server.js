@@ -58,36 +58,51 @@ app.get(
     apiHandler(async (req, res) => {
         const contact = await sf
             .query(
-                `SELECT Id, Name, Email, Bio__c, Photo_URL__c, Feats_of_Strength__c, Main_Website__c, Twitter_Username__c, Instagram_Username__c, GitHub_Username__c, LinkedIn_Username__c, CodePen_Username__c
+                `SELECT Id, Name, Email, Bio__c, Picture_Content_Version_ID__c, Feats_of_Strength__c, Main_Website__c, Twitter_Username__c, Instagram_Username__c, GitHub_Username__c, LinkedIn_Username__c, CodePen_Username__c
                 FROM Contact
                 LIMIT 1`
             )
             .then(({ records }) => records[0]);
 
-        const stickers = await sf
-            .query(
-                `SELECT Id, Name, Image_URL__c
-                FROM Sticker__c
-                WHERE Id IN
-                (SELECT Sticker__c
-                FROM Contact_Sticker_Association__c
-                WHERE Contact__c = '${contact.Id}')`
-            )
-            .then(({ records }) => records);
+        const [imageMeta, imageBlob, stickers, website] = await Promise.all([
+            sf
+                .request(
+                    `/services/data/v50.0/sobjects/ContentDocument/${contact.Picture_Content_Version_ID__c}/LatestPublishedVersion`
+                )
+                .catch(() => ({ FileType: 'png' })),
+            sf
+                .request(
+                    `/services/data/v50.0/sobjects/ContentDocument/${contact.Picture_Content_Version_ID__c}/LatestPublishedVersion/VersionData`
+                )
+                .catch(
+                    () =>
+                        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAaGVYSWZNTQAqAAAACAAEAQYAAwAAAAEAAgAAARIAAwAAAAEAAQAAASgAAwAAAAEAAgAAh2kABAAAAAEAAAA+AAAAAAADoAEAAwAAAAEAAQAAoAIABAAAAAEAAAABoAMABAAAAAEAAAABAAAAAHvdGMUAAALgaVRYdFhNTDpjb20uYWRvYmUueG1wAAAAAAA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJYTVAgQ29yZSA1LjQuMCI+CiAgIDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+CiAgICAgIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICAgICAgICAgIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIgogICAgICAgICAgICB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyI+CiAgICAgICAgIDx0aWZmOlBob3RvbWV0cmljSW50ZXJwcmV0YXRpb24+MjwvdGlmZjpQaG90b21ldHJpY0ludGVycHJldGF0aW9uPgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICAgICA8dGlmZjpDb21wcmVzc2lvbj4xPC90aWZmOkNvbXByZXNzaW9uPgogICAgICAgICA8dGlmZjpSZXNvbHV0aW9uVW5pdD4yPC90aWZmOlJlc29sdXRpb25Vbml0PgogICAgICAgICA8ZXhpZjpQaXhlbFlEaW1lbnNpb24+MTwvZXhpZjpQaXhlbFlEaW1lbnNpb24+CiAgICAgICAgIDxleGlmOkNvbG9yU3BhY2U+MTwvZXhpZjpDb2xvclNwYWNlPgogICAgICAgICA8ZXhpZjpQaXhlbFhEaW1lbnNpb24+MTwvZXhpZjpQaXhlbFhEaW1lbnNpb24+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgrdUqUcAAAADUlEQVQIHWPYf/bufwAIIQNpUz6zkQAAAABJRU5ErkJggg=='
+                ),
 
-        const website = await sf
-            .query(
-                `SELECT URL__c
-                FROM Website__c
-                WHERE Id = '${contact.Main_Website__c}'`
-            )
-            .then(({ records }) => records[0]);
+            sf
+                .query(
+                    `SELECT Id, Name, Image_URL__c
+            FROM Sticker__c
+            WHERE Id IN
+            (SELECT Sticker__c
+            FROM Contact_Sticker_Association__c
+            WHERE Contact__c = '${contact.Id}')`
+                )
+                .then(({ records }) => records),
+            sf
+                .query(
+                    `SELECT URL__c
+            FROM Website__c
+            WHERE Id = '${contact.Main_Website__c}'`
+                )
+                .then(({ records }) => records[0])
+        ]);
 
         return res.json({
             name: contact.Name,
             email: contact.Email,
             bio: contact.Bio__c,
-            img: contact.Photo_URL__c,
+            img: `data:image/${imageMeta.FileType};base64,${imageBlob}`,
             strengths: contact.Feats_of_Strength__c.split(',')
                 .map((t) => t.trim())
                 .filter(Boolean),
