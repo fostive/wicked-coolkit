@@ -1,11 +1,15 @@
 <template>
     <div class="container">
         <div class="webring light-mode">
-            <div class="description">
-                <a href="" class="home">{name}</a>
-                <span>{description}</span>
+            <div class="description-container">
+                <div if:true={error} class="error">{error}</div>
+                <div if:true={loading} class="loading">Loading...</div>
+                <div class="description">
+                    <a if:true={name} href="" class="home">{name}</a>
+                    <span if:true={description}>{description}</span>
+                </div>
             </div>
-            <nav>
+            <nav if:true={success}>
                 <a href={prevHref} class="previous"
                     ><svg
                         xmlns="http://www.w3.org/2000/svg"

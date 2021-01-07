@@ -40,16 +40,19 @@
     text-decoration: underline;
 }
 
-.webring .description,
+.webring .description-container,
 .webring nav {
     padding: 8px 12px;
 }
 
-.webring .description {
+.webring .description-container {
     margin: 0;
     background-color: rgba(0, 0, 0, 0.3);
-    font-weight: normal;
     line-height: 1.3;
+}
+
+.webring .description {
+    font-weight: normal;
 }
 
 .webring .description span:before {

@@ -7,6 +7,8 @@ export default class TradingCard extends LightningElement {
     imgSrc = null;
     link = null;
     strengths = null;
+    error = null;
+    loading = true;
 
     @api host = DEFAULT_HOST;
 
@@ -62,12 +64,33 @@ export default class TradingCard extends LightningElement {
         return false;
     }
 
+    get hasLinks() {
+        return (
+            [
+                this.email,
+                this.twitter,
+                this.codepen,
+                this.github,
+                this.linkedin,
+                this.instagram
+            ].filter(Boolean).length > 0
+        );
+    }
+
     connectedCallback() {
         this.fetchCard();
     }
 
     async fetchCard() {
+        this.loading = true;
         const res = await fetch(`${this.host}/api/tradingCard`);
+        this.loading = false;
+
+        if (!res.ok) {
+            this.error = 'There was an error loading the trading card.';
+            return;
+        }
+
         const {
             name,
             email,

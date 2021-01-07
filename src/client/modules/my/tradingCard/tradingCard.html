@@ -2,11 +2,11 @@
     <div class="trading-card">
         <div class="front">
             <section class="dev-intro">
-                <h1 class="dev-name">{displayName}</h1>
-                <div class="dev-img">
+                <h1 if:true={displayName} class="dev-name">{displayName}</h1>
+                <div if:true={imgSrc} class="dev-img">
                     <img src={imgSrc} alt={displayName} />
                 </div>
-                <ul class="contact-links">
+                <ul if:true={hasLinks} class="contact-links">
                     <li if:true={email} class="contact-email">
                         <a href={email}>
                             <svg
@@ -165,7 +165,9 @@
                 </ul>
             </section>
             <section class="dev-desc">
-                <p class="description">{description}</p>
+                <p if:true={loading}>Loading...</p>
+                <p if:true={error}>{error}</p>
+                <p if:true={description} class="description">{description}</p>
                 <ul if:true={strengths} class="strengths">
                     <h2>Feats of strength</h2>
                     <template for:each={strengths} for:item="strength">

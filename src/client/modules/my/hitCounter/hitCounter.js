@@ -19,14 +19,6 @@ export default class HitCounter extends LightningElement {
         this.postCount();
     }
 
-    async fetchCount() {
-        const res = await fetch(
-            `${this.host}/api/hitCounter?site=${window.location.host}`
-        );
-        const { count } = await res.json();
-        this.renderCount(count);
-    }
-
     async postCount() {
         const res = await fetch(
             `${this.host}/api/hitCounter?site=${window.location.host}`,
@@ -34,6 +26,12 @@ export default class HitCounter extends LightningElement {
                 method: 'POST'
             }
         );
+
+        if (!res.ok) {
+            this.renderCount('ERROR!!!');
+            return;
+        }
+
         const { count } = await res.json();
         this.renderCount(count);
     }
