@@ -5,7 +5,7 @@
                 <div if:true={error} class="error">{error}</div>
                 <div if:true={loading} class="loading">Loading...</div>
                 <div class="description">
-                    <a if:true={name} href="" class="home">{name}</a>
+                    <a if:true={name} href={link} class="home">{name}</a>
                     <span if:true={description}>{description}</span>
                 </div>
             </div>

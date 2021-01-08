@@ -157,9 +157,26 @@ app.get(
 app.get(
     '/api/webring',
     apiHandler(async (req, res) => {
+        const contact = await sf
+            .query(
+                `SELECT Main_Website__c
+                FROM Contact
+                LIMIT 1`
+            )
+            .then(({ records }) => records[0]);
+
+        const website = await sf
+            .query(
+                `SELECT URL__c
+                FROM Website__c
+                WHERE Id = '${contact.Main_Website__c}'`
+            )
+            .then(({ records }) => records[0]);
+
         // TODO: fix this with the correct query
         // https://github.com/crcastle/weirdos-salesforce-app/issues/4
         res.json({
+            link: website.URL__c,
             name: 'My cool webring!',
             description: 'This is a webring about cool stuff and other things!'
         });
