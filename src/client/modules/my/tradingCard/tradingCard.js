@@ -17,7 +17,7 @@ export default class TradingCard extends LightningElement {
         return this._stickers.map((sticker) => ({
             id: sticker.id,
             href: `${this.host}/api/sticker/?id=${sticker.id}`,
-            imgSrc: `${this.host}/resources/images/stickers/${sticker.path}.svg`,
+            imgSrc: `${this.host}/resources/stickers/svg/${sticker.path}.svg`,
             imgAlt: `${sticker.name} sticker`
         }));
     }
