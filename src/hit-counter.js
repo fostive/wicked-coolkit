@@ -1,2 +1,2 @@
-import HitCounter from './client/modules/my/hitCounter/hitCounter';
+import HitCounter from './client/modules/wck/hitCounter/hitCounter';
 customElements.define('wck-hit-counter', HitCounter.CustomElementConstructor);

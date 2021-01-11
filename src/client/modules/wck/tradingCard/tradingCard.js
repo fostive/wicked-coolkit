@@ -1,5 +1,5 @@
 import { LightningElement, api } from 'lwc';
-import DEFAULT_HOST from '../../../host';
+import * as host from '../../../host';
 
 export default class TradingCard extends LightningElement {
     displayName = null;
@@ -10,15 +10,15 @@ export default class TradingCard extends LightningElement {
     error = null;
     loading = true;
 
-    @api host = DEFAULT_HOST;
+    @api host = null;
 
     _stickers = [];
     get stickers() {
         return this._stickers.map((sticker) => ({
             id: sticker.id,
-            href: `${this.host}/api/sticker/?id=${sticker.id}`,
-            imgSrc: `${this.host}/resources/stickers/svg/${sticker.path}.svg`,
-            imgAlt: `${sticker.name} sticker`
+            href: `${host.api(this.host)}/sticker/?id=${sticker.id}`,
+            imgSrc: host.sticker(sticker.path),
+            imgAlt: sticker.alt
         }));
     }
 
@@ -78,12 +78,17 @@ export default class TradingCard extends LightningElement {
     }
 
     connectedCallback() {
-        this.fetchCard();
+        if (host.isValid(this.host)) {
+            this.fetchCard();
+        } else {
+            this.loading = false;
+            this.error = 'Please set the host property on your component.';
+        }
     }
 
     async fetchCard() {
         this.loading = true;
-        const res = await fetch(`${this.host}/api/tradingCard`);
+        const res = await fetch(`${host.api(this.host)}/tradingCard`);
         this.loading = false;
 
         if (!res.ok) {

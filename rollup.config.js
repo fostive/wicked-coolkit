@@ -13,10 +13,6 @@ export default {
         {
             dir: './dist',
             format: 'esm'
-        },
-        {
-            dir: './package',
-            format: 'esm'
         }
     ],
     plugins: [
