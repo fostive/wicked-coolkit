@@ -1,4 +1,4 @@
-const isLocal = () => window.location.hostname === 'localhost';
+const isLocal = () => window.location.host === 'localhost:3001';
 
 export const isValid = (host) => isLocal() || !!host;
 
