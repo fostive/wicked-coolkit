@@ -78,12 +78,7 @@ export default class TradingCard extends LightningElement {
     }
 
     connectedCallback() {
-        if (host.isValid(this.host)) {
-            this.fetchCard();
-        } else {
-            this.loading = false;
-            this.error = 'Please set the host property on your component.';
-        }
+        this.fetchCard();
     }
 
     async fetchCard() {

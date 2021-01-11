@@ -22,12 +22,7 @@ export default class Webring extends LightningElement {
     }
 
     connectedCallback() {
-        if (host.isValid(this.host)) {
-            this.fetchData();
-        } else {
-            this.loading = false;
-            this.error = 'Please specify the host property on your component.';
-        }
+        this.fetchData();
     }
 
     async fetchData() {
