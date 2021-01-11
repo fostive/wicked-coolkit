@@ -9,5 +9,8 @@
         "username": "$SALESFORCE_USER",
         "password": "$SALESFORCE_PASSWORD",
         "url": "$SALESFORCE_URL"
+    },
+    ssl: {
+        rejectUnauthorized: false
     }
 }
