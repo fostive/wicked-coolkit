@@ -10,8 +10,7 @@ export default class TradingCard extends LightningElement {
     error = null;
     loading = true;
 
-    @api host = host.devHost;
-    @api imageHost = '';
+    @api host = null;
 
     _stickers = [];
     get stickers() {

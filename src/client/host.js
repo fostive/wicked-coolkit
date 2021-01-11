@@ -1,12 +1,14 @@
-export const devHost = 'localhost:3002';
+const isLocal = () => window.location.hostname === 'localhost';
 
-export const isValid = (host) =>
-    window.location.hostname === 'localhost' || host !== devHost;
+export const isValid = (host) => isLocal() || !!host;
 
-export const api = (host) => `http${host !== devHost ? 's' : ''}://${host}/api`;
+export const api = (host) => {
+    const protocol = isLocal() ? 'http' : 'https';
+    return `${protocol}://${host || window.location.host}/api`;
+};
 
 export const sticker = (s) => {
-    return window.location.hostname === 'localhost'
+    return isLocal()
         ? `/stickers/svg/${s}.svg`
         : `https://unpkg.com/wicked-coolkit/stickers/svg/${s}.svg`;
 };

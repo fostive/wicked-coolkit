@@ -13,10 +13,9 @@ export default class HitCounter extends LightningElement {
     digit7 = '?';
     digit8 = '?';
 
-    @api host = host.devHost;
+    @api host = null;
 
     connectedCallback() {
-        console.log('__HOST__');
         if (host.isValid(this.host)) {
             this.postCount();
         } else {

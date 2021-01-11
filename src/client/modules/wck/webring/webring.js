@@ -7,7 +7,7 @@ export default class Webring extends LightningElement {
     error = null;
     loading = true;
 
-    @api host = host.devHost;
+    @api host = null;
 
     get prevHref() {
         return `${host.api(this.host)}/webring/prev`;
