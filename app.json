@@ -2,6 +2,7 @@
     "name": "Heroku Wicked Coolkot",
     "description": "",
     "website": "https://heroku-wicked-coolkit.herokuapp.com",
+    "success_url": "/",
     "repository": "https://github.com/andyet/heroku-wicked-coolkit-user",
     "buildpacks": [
         {
