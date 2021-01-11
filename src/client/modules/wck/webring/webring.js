@@ -1,5 +1,5 @@
 import { LightningElement, api } from 'lwc';
-import DEFAULT_HOST from '../../../host';
+import * as host from '../../../host';
 
 export default class Webring extends LightningElement {
     name = null;
@@ -7,14 +7,14 @@ export default class Webring extends LightningElement {
     error = null;
     loading = true;
 
-    @api host = DEFAULT_HOST;
+    @api host = host.devHost;
 
     get prevHref() {
-        return `${this.host}/api/webring/prev`;
+        return `${host.api(this.host)}/webring/prev`;
     }
 
     get nextHref() {
-        return `${this.host}/api/webring/next`;
+        return `${host.api(this.host)}/webring/next`;
     }
 
     get success() {
@@ -22,12 +22,17 @@ export default class Webring extends LightningElement {
     }
 
     connectedCallback() {
-        this.fetchData();
+        if (host.isValid(this.host)) {
+            this.fetchData();
+        } else {
+            this.loading = false;
+            this.error = 'Please specify the host property on your component.';
+        }
     }
 
     async fetchData() {
         this.loading = true;
-        const res = await fetch(`${this.host}/api/webring`);
+        const res = await fetch(`${host.api(this.host)}/webring`);
         this.loading = false;
 
         if (!res.ok) {

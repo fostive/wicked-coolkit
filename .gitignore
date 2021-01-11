@@ -28,5 +28,3 @@ ehthumbs.db
 [Dd]esktop.ini
 $RECYCLE.BIN/
 config/local.json
-package/*
-!package/package.json

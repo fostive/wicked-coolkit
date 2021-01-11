@@ -7,6 +7,5 @@
     "host": {
         "name": "localhost",
         "port": 3002
-    },
-    "sites": ["localhost:3001"]
+    }
 }

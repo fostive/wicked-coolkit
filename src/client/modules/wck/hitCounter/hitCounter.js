@@ -1,5 +1,5 @@
 import { LightningElement, api } from 'lwc';
-import DEFAULT_HOST from '../../../host';
+import * as host from '../../../host';
 
 const DIGIT_COUNT = 8;
 
@@ -13,15 +13,23 @@ export default class HitCounter extends LightningElement {
     digit7 = '?';
     digit8 = '?';
 
-    @api host = DEFAULT_HOST;
+    @api host = host.devHost;
 
     connectedCallback() {
-        this.postCount();
+        console.log('__HOST__');
+        if (host.isValid(this.host)) {
+            this.postCount();
+        } else {
+            console.error(
+                'Please specify the host property on your component.'
+            );
+            this.renderCount('ERROR!!!');
+        }
     }
 
     async postCount() {
         const res = await fetch(
-            `${this.host}/api/hitCounter?site=${window.location.host}`,
+            `${host.api(this.host)}/hitCounter?site=${window.location.host}`,
             {
                 method: 'POST'
             }
