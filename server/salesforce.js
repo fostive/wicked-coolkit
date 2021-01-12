@@ -128,12 +128,24 @@ const getRandomWebringForSticker = async (sf, stickerId) => {
 const getWebring = async (sf) => {
     const contact = await getContact(sf);
 
-    // TODO: fix this with the correct query
-    // https://github.com/crcastle/weirdos-salesforce-app/issues/4
+    const webring = await sf
+        .query(
+            `SELECT Webring__r.Id, Webring__r.Name, Webring__r.Description__c, Webring__r.Sticker__c
+            FROM Contact
+            WHERE Id = '${contact.id}'`
+        )
+        .then(({ records }) => records)
+        // TODO: fix this with the correct query
+        // https://github.com/crcastle/weirdos-salesforce-app/issues/4
+        .catch(() => ({
+            name: 'My cool webring!',
+            description: 'This is a webring about cool stuff and other things!'
+        }));
+
     return {
         url: contact.website,
-        name: 'My cool webring!',
-        description: 'This is a webring about cool stuff and other things!'
+        name: webring.name,
+        description: webring.description
     };
 };
 
