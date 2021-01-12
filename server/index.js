@@ -3,6 +3,7 @@ const helmet = require('helmet');
 const express = require('express');
 const cors = require('cors');
 const jsforce = require('jsforce');
+const deepmerge = require('deepmerge');
 const pgp = require('pg-promise')();
 const _sfQueries = require('./salesforce');
 const _dbQueries = require('./db');
@@ -25,7 +26,12 @@ const bindMethods = (obj, ...params) =>
         return acc;
     }, {});
 
-module.exports = ({ pg: pgConfig, sf: sfConfig, app: appConfig }) => {
+module.exports = ({
+    pg: pgConfig,
+    sf: sfConfig,
+    app: appConfig,
+    helmet: helmetConfig = {}
+}) => {
     const app = express();
     const pg = pgp(pgConfig);
     const sf = new jsforce.Connection({ loginUrl: sfConfig.url });
@@ -34,22 +40,26 @@ module.exports = ({ pg: pgConfig, sf: sfConfig, app: appConfig }) => {
     const sfQueries = bindMethods(_sfQueries, sf);
     const dbQueries = bindMethods(_dbQueries, pg);
 
-    const defaultCspDirectives = helmet.contentSecurityPolicy.getDefaultDirectives();
-
-    app.use(
-        helmet({
-            contentSecurityPolicy: {
-                directives: {
-                    ...defaultCspDirectives,
-                    'script-src': [
-                        ...defaultCspDirectives['script-src'],
-                        'unpkg.com'
-                    ],
-                    'img-src': [...defaultCspDirectives['img-src'], 'unpkg.com']
-                }
-            }
-        })
-    );
+    if (process.env.NODE_ENV === 'production') {
+        app.use(
+            helmet(
+                deepmerge(
+                    {
+                        contentSecurityPolicy: {
+                            directives: deepmerge(
+                                helmet.contentSecurityPolicy.getDefaultDirectives(),
+                                {
+                                    'script-src': ['unpkg.com'],
+                                    'img-src': ['unpkg.com']
+                                }
+                            )
+                        }
+                    },
+                    helmetConfig
+                )
+            )
+        );
+    }
 
     app.use(compression());
     app.use(cors());
