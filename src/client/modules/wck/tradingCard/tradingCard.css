@@ -152,15 +152,11 @@ img {
     display: grid;
     grid-gap: 1.6em;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    font-size: 100%;
+    font-family: 'Courier New', Courier, serif;
+    font-weight: bold;
+    color: #1e1e60;
 }
-
-/*@media screen and (min-width: 750px) {
-    .trading-card {
-        max-width: 800px;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-    }
-}*/
 
 .trading-card .front,
 .trading-card .back {
@@ -346,6 +342,7 @@ img {
     justify-content: space-around;
     align-content: space-around;
     flex-wrap: wrap;
+    background-color: #f6f0e2;
 }
 
 .sticker {
