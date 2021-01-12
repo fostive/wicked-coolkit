@@ -35,9 +35,9 @@ export default class Webring extends LightningElement {
             return;
         }
 
-        const { name, description, link } = await res.json();
+        const { name, description, url } = await res.json();
 
-        this.link = link;
+        this.url = url;
         this.name = name;
         this.description = description;
     }

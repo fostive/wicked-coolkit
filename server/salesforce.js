@@ -57,17 +57,6 @@ const getStickers = (sf, id) => {
         );
 };
 
-const getWebsite = (sf, websiteId) => {
-    return sf
-        .query(
-            `SELECT URL__c
-        FROM Website__c
-        WHERE Id = '${websiteId}'`
-        )
-        .then(({ records }) => records[0])
-        .then((website) => ({ url: website.URL_c }));
-};
-
 const getImage = async (sf, imageId) => {
     const [imageMeta, imageBlob] = await Promise.all([
         sf
@@ -90,15 +79,41 @@ const getImage = async (sf, imageId) => {
     return `data:image/${imageMeta.FileType};base64,${imageBlob}`;
 };
 
-const getRandomWebringForContact = async (sf, contactId) => {
-    const randomWebsite = await sf
+const _getRandomWebsite = (sf, webringId) => {
+    return sf
         .query(
             `SELECT URL__c
             FROM Website__c
-            WHERE Contact__c = '${contactId}'`
+            WHERE Id IN
+            (SELECT Website__c
+            FROM Website_Webring_Association__c
+            WHERE Webring__c = '${webringId}')`
         )
         .then(({ records }) => random(records));
+};
 
+const _getWebringForContact = async (sf, _contactId) => {
+    const contactId = _contactId || (await getContact(sf).then((c) => c.id));
+
+    const webring = await sf
+        .query(
+            `SELECT Webring__r.Id, Webring__r.Name, Webring__r.Description__c
+            FROM Contact
+            WHERE Id = '${contactId}'`
+        )
+        .then(({ records }) => records[0].Webring__r)
+        .then((w) => ({
+            id: w.Id,
+            name: w.Name,
+            description: w.Description__c
+        }));
+
+    return webring;
+};
+
+const getRandomWebringForContact = async (sf) => {
+    const webring = await _getWebringForContact(sf);
+    const randomWebsite = await _getRandomWebsite(sf, webring.id);
     return randomWebsite.URL__c;
 };
 
@@ -111,42 +126,25 @@ const getRandomWebringForSticker = async (sf, stickerId) => {
         )
         .then(({ records }) => records[0].Id);
 
-    const randomWebsite = await sf
-        .query(
-            `SELECT URL__c
-            FROM Website__c
-            WHERE Id IN
-            (SELECT Website__c
-            FROM Website_Webring_Association__c
-            WHERE Webring__c = '${webringId}')`
-        )
-        .then(({ records }) => random(records));
+    const randomWebsite = await _getRandomWebsite(sf, webringId);
 
     return randomWebsite.URL__c;
 };
 
 const getWebring = async (sf) => {
     const contact = await getContact(sf);
-
-    const webring = await sf
-        .query(
-            `SELECT Webring__r.Id, Webring__r.Name, Webring__r.Description__c, Webring__r.Sticker__c
-            FROM Contact
-            WHERE Id = '${contact.id}'`
-        )
-        .then(({ records }) => records[0].Webring__r);
+    const webring = await _getWebringForContact(sf, contact.id);
 
     return {
         url: contact.website,
-        name: webring.Name,
-        description: webring.Description__c
+        name: webring.name,
+        description: webring.description
     };
 };
 
 module.exports = {
     getContact,
     getStickers,
-    getWebsite,
     getImage,
     getWebring,
     getRandomWebringForContact,

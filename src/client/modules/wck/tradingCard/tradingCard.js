@@ -5,7 +5,7 @@ export default class TradingCard extends LightningElement {
     displayName = null;
     description = null;
     imgSrc = null;
-    link = null;
+    website = null;
     strengths = null;
     error = null;
     loading = true;
@@ -95,7 +95,7 @@ export default class TradingCard extends LightningElement {
             name,
             email,
             bio,
-            link,
+            website,
             img,
             twitter,
             codepen,
@@ -111,7 +111,7 @@ export default class TradingCard extends LightningElement {
         this.imgSrc = img;
         this.strengths = strengths;
 
-        this.link = link;
+        this.website = website;
 
         this._email = email;
         this._twitter = twitter;
