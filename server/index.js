@@ -34,7 +34,23 @@ module.exports = ({ pg: pgConfig, sf: sfConfig, app: appConfig }) => {
     const sfQueries = bindMethods(_sfQueries, sf);
     const dbQueries = bindMethods(_dbQueries, pg);
 
-    app.use(helmet());
+    const defaultCspDirectives = helmet.contentSecurityPolicy.getDefaultDirectives();
+
+    app.use(
+        helmet({
+            contentSecurityPolicy: {
+                directives: {
+                    ...defaultCspDirectives,
+                    'script-src': [
+                        ...defaultCspDirectives['script-src'],
+                        'unpkg.com'
+                    ],
+                    'img-src': [...defaultCspDirectives['img-src'], 'unpkg.com']
+                }
+            }
+        })
+    );
+
     app.use(compression());
     app.use(cors());
 
