@@ -39,7 +39,7 @@ const getContact = async (sf) => {
 const getStickers = (sf, id) => {
     return sf
         .query(
-            `SELECT Id, Name, Image_URL__c
+            `SELECT Id, Name, Image_Alt_Text__c
         FROM Sticker__c
         WHERE Id IN
         (SELECT Sticker__c
@@ -51,8 +51,8 @@ const getStickers = (sf, id) => {
             stickers.map((sticker) => ({
                 // TODO: use new column names for name and alt text
                 id: sticker.Id,
-                path: sticker.Image_URL__c,
-                alt: sticker.Name
+                path: sticker.Name,
+                alt: sticker.Image_Alt_Text__c
             }))
         );
 };
@@ -134,18 +134,12 @@ const getWebring = async (sf) => {
             FROM Contact
             WHERE Id = '${contact.id}'`
         )
-        .then(({ records }) => records)
-        // TODO: fix this with the correct query
-        // https://github.com/crcastle/weirdos-salesforce-app/issues/4
-        .catch(() => ({
-            name: 'My cool webring!',
-            description: 'This is a webring about cool stuff and other things!'
-        }));
+        .then(({ records }) => records[0].Webring__r);
 
     return {
         url: contact.website,
-        name: webring.name,
-        description: webring.description
+        name: webring.Name,
+        description: webring.Description__c
     };
 };
 
