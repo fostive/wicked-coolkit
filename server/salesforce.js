@@ -1,3 +1,6 @@
+const fetch = require('node-fetch');
+const { Base64Encode } = require('base64-stream');
+
 const random = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 const getContact = async (sf) => {
@@ -58,14 +61,26 @@ const getStickers = (sf, id) => {
 };
 
 const getImage = async (sf, imageId) => {
-    const [imageMeta, imageBlob] = await Promise.all([
-        sf.request(`/services/data/v50.0/sobjects/ContentVersion/${imageId}`),
-        sf.request(
-            `/services/data/v50.0/sobjects/ContentVersion/${imageId}/VersionData`
+    const path = `/services/data/v50.0/sobjects/ContentVersion/${imageId}`;
+    const [imageMeta, base64Image] = await Promise.all([
+        sf.request(path),
+        fetch(`${sf.instanceUrl}${path}/VersionData`, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${sf.accessToken}`
+            }
+        }).then(
+            (response) =>
+                new Promise((resolve, reject) => {
+                    let data = '';
+                    response.body
+                        .pipe(new Base64Encode())
+                        .on('data', (d) => (data += d))
+                        .on('end', () => resolve(data))
+                        .on('error', reject);
+                })
         )
     ]);
-
-    const base64Image = Buffer.from(imageBlob, 'binary').toString('base64');
 
     return `data:image/${imageMeta.FileType.toLowerCase()};base64,${base64Image}`;
 };
