@@ -69,17 +69,25 @@ const getImage = async (sf, imageId) => {
             headers: {
                 Authorization: `Bearer ${sf.accessToken}`
             }
-        }).then(
-            (response) =>
-                new Promise((resolve, reject) => {
-                    let data = '';
-                    response.body
-                        .pipe(new Base64Encode())
-                        .on('data', (d) => (data += d))
-                        .on('end', () => resolve(data))
-                        .on('error', reject);
-                })
-        )
+        })
+            .then((res) => {
+                if (res.ok) {
+                    return res.body;
+                }
+                throw new Error(
+                    `HTTP Error Response: ${res.status} ${res.statusText}`
+                );
+            })
+            .then(
+                (body) =>
+                    new Promise((resolve, reject) => {
+                        let data = '';
+                        body.pipe(new Base64Encode())
+                            .on('data', (d) => (data += d))
+                            .on('end', () => resolve(data))
+                            .on('error', reject);
+                    })
+            )
     ]);
 
     return `data:image/${imageMeta.FileType.toLowerCase()};base64,${base64Image}`;
