@@ -149,7 +149,6 @@ img {
 
 .trading-card {
     width: 100%;
-    max-width: 800px;
     margin: auto;
     display: grid;
     grid-gap: 1.6em;
@@ -162,6 +161,7 @@ img {
 
 .trading-card .front,
 .trading-card .back {
+    width: 100%;
     max-width: 380px;
     min-height: 500px;
     padding: 0.7em;
@@ -176,6 +176,7 @@ img {
     background-image: linear-gradient(45deg, #79589f, #009edb);
     display: flex;
     flex-direction: column;
+    justify-self: end;
 }
 
 /* Intro section
@@ -344,6 +345,7 @@ img {
     justify-content: space-around;
     align-content: space-around;
     flex-wrap: wrap;
+    justify-self: start;
     background-color: #f6f0e2;
 }
 
