@@ -6,16 +6,10 @@ export default class Webring extends LightningElement {
     description = null;
     error = null;
     loading = true;
+    prevHref = null;
+    nextHref = null;
 
     @api host = null;
-
-    get prevHref() {
-        return `${host.api(this.host)}/webring/prev`;
-    }
-
-    get nextHref() {
-        return `${host.api(this.host)}/webring/next`;
-    }
 
     get success() {
         return !this.loading && !this.error;
@@ -25,9 +19,21 @@ export default class Webring extends LightningElement {
         this.fetchData();
     }
 
+    async onLinkClick(e) {
+        const site = e.target.getAttribute('href');
+        const res = await fetch(`${host.api(this.host)}/webring?site=${site}`);
+
+        const { prevWebsite, nextWebsite } = await res.json();
+
+        this.prevHref = prevWebsite;
+        this.nextHref = nextWebsite;
+    }
+
     async fetchData() {
         this.loading = true;
-        const res = await fetch(`${host.api(this.host)}/webring`);
+        const res = await fetch(
+            `${host.api(this.host)}/webring?site=${window.location.href}`
+        );
         this.loading = false;
 
         if (!res.ok) {
@@ -35,10 +41,18 @@ export default class Webring extends LightningElement {
             return;
         }
 
-        const { name, description, url } = await res.json();
+        const {
+            name,
+            description,
+            url,
+            prevWebsite,
+            nextWebsite
+        } = await res.json();
 
         this.url = url;
         this.name = name;
         this.description = description;
+        this.prevHref = prevWebsite;
+        this.nextHref = nextWebsite;
     }
 }

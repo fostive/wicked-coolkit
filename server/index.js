@@ -112,24 +112,8 @@ module.exports = ({
     app.get(
         '/api/webring',
         apiHandler(async (req, res) => {
-            const webring = await sfQueries.getWebring();
+            const webring = await sfQueries.getWebring(req.query.site);
             res.json(webring);
-        })
-    );
-
-    app.get(
-        '/api/webring/prev',
-        apiHandler(async (req, res) => {
-            const url = await sfQueries.getRandomWebringForContact();
-            res.redirect(url);
-        })
-    );
-
-    app.get(
-        '/api/webring/next',
-        apiHandler(async (req, res) => {
-            const url = await sfQueries.getRandomWebringForContact();
-            res.redirect(url);
         })
     );
 

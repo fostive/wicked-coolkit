@@ -1,7 +1,30 @@
 const fetch = require('node-fetch');
 const { Base64Encode } = require('base64-stream');
+const normalizeUrl = require('normalize-url');
 
 const random = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+const last = (arr) => arr[arr.length - 1];
+
+const wrapArr = (arr, index, dir) => {
+    const nextIndex = index + dir;
+    if (nextIndex >= arr.length) {
+        return arr[0];
+    }
+    if (nextIndex < 0) {
+        return last(arr);
+    }
+    return arr[nextIndex];
+};
+
+const normalizeWebringUrl = (u) =>
+    normalizeUrl(u, { stripHash: true, stripProtocol: true });
+
+const findWebringUrlIndex = (webring, url) => {
+    return url
+        ? webring.map(normalizeWebringUrl).indexOf(normalizeWebringUrl(url))
+        : -1;
+};
 
 const getContact = async (sf) => {
     const c = await sf
@@ -93,42 +116,18 @@ const getImage = async (sf, imageId) => {
     return `data:image/${imageMeta.FileType.toLowerCase()};base64,${base64Image}`;
 };
 
-const _getRandomWebsite = (sf, webringId) => {
+const _getWebringWebsites = (sf, webringId) => {
     return sf
         .query(
-            `SELECT URL__c
+            `SELECT URL__c, Name
             FROM Website__c
             WHERE Id IN
             (SELECT Website__c
             FROM Website_Webring_Association__c
-            WHERE Webring__c = '${webringId}')`
+            WHERE Webring__c = '${webringId}')
+            ORDER BY Name` // TODO: change this to a deterministic order field
         )
-        .then(({ records }) => random(records));
-};
-
-const _getWebringForContact = async (sf, _contactId) => {
-    const contactId = _contactId || (await getContact(sf).then((c) => c.id));
-
-    const webring = await sf
-        .query(
-            `SELECT Webring__r.Id, Webring__r.Name, Webring__r.Description__c
-            FROM Contact
-            WHERE Id = '${contactId}'`
-        )
-        .then(({ records }) => records[0].Webring__r)
-        .then((w) => ({
-            id: w.Id,
-            name: w.Name,
-            description: w.Description__c
-        }));
-
-    return webring;
-};
-
-const getRandomWebringForContact = async (sf) => {
-    const webring = await _getWebringForContact(sf);
-    const randomWebsite = await _getRandomWebsite(sf, webring.id);
-    return randomWebsite.URL__c;
+        .then(({ records }) => records.map((w) => w.URL__c));
 };
 
 const getRandomWebringForSticker = async (sf, stickerId) => {
@@ -140,19 +139,42 @@ const getRandomWebringForSticker = async (sf, stickerId) => {
         )
         .then(({ records }) => records[0].Id);
 
-    const randomWebsite = await _getRandomWebsite(sf, webringId);
+    const websites = await _getWebringWebsites(sf, webringId);
 
-    return randomWebsite.URL__c;
+    return random(websites);
 };
 
-const getWebring = async (sf) => {
+const getWebring = async (sf, currentWebsite) => {
     const contact = await getContact(sf);
-    const webring = await _getWebringForContact(sf, contact.id);
+
+    const webring = await sf
+        .query(
+            `SELECT Webring__r.Id, Webring__r.Name, Webring__r.Description__c
+            FROM Contact
+            WHERE Id = '${contact.id}'`
+        )
+        .then(({ records }) => records[0].Webring__r)
+        .then((w) => ({
+            id: w.Id,
+            name: w.Name,
+            description: w.Description__c
+        }));
+
+    const websites = await _getWebringWebsites(sf, webring.id);
+    const currentIndex = findWebringUrlIndex(websites, currentWebsite);
+    const prevWebsite =
+        currentIndex === -1
+            ? last(websites)
+            : wrapArr(websites, currentIndex, -1);
+    const nextWebsite =
+        currentIndex === -1 ? websites[0] : wrapArr(websites, currentIndex, 1);
 
     return {
         url: contact.website,
         name: webring.name,
-        description: webring.description
+        description: webring.description,
+        prevWebsite,
+        nextWebsite
     };
 };
 
@@ -161,6 +183,5 @@ module.exports = {
     getStickers,
     getImage,
     getWebring,
-    getRandomWebringForContact,
     getRandomWebringForSticker
 };
