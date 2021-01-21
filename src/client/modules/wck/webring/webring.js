@@ -4,7 +4,6 @@ import * as host from '../../../host';
 export default class Webring extends LightningElement {
     name = null;
     description = null;
-    error = null;
     loading = true;
     prevHref = null;
     nextHref = null;
@@ -15,44 +14,46 @@ export default class Webring extends LightningElement {
         return !this.loading && !this.error;
     }
 
+    _error = null;
+    get error() {
+        return this._error;
+    }
+
+    set error(e) {
+        this._error = e;
+        // eslint-disable-next-line @lwc/lwc/no-inner-html
+        this.template.querySelector('.error-message').innerHTML = e || '';
+    }
+
     connectedCallback() {
         this.fetchData();
     }
 
     async onLinkClick(e) {
-        const site = e.target.getAttribute('href');
-        const res = await fetch(`${host.api(this.host)}/webring?site=${site}`);
+        const { data } = await host.fetchData(
+            this,
+            `/webring?site=${e.target.getAttribute('href')}`
+        );
 
-        const { prevWebsite, nextWebsite } = await res.json();
-
-        this.prevHref = prevWebsite;
-        this.nextHref = nextWebsite;
+        this.prevHref = data.prevWebsite;
+        this.nextHref = data.nextWebsite;
     }
 
     async fetchData() {
-        this.loading = true;
-        const res = await fetch(
-            `${host.api(this.host)}/webring?site=${window.location.href}`
+        const { data, error } = await host.fetchInitial(
+            this,
+            `/webring?site=${window.location.href}`
         );
-        this.loading = false;
 
-        if (!res.ok) {
-            this.error = 'There was an error loading the webring.';
+        if (error) {
+            this.error = error;
             return;
         }
 
-        const {
-            name,
-            description,
-            url,
-            prevWebsite,
-            nextWebsite
-        } = await res.json();
-
-        this.url = url;
-        this.name = name;
-        this.description = description;
-        this.prevHref = prevWebsite;
-        this.nextHref = nextWebsite;
+        this.url = data.url;
+        this.name = data.name;
+        this.description = data.description;
+        this.prevHref = data.prevWebsite;
+        this.nextHref = data.nextWebsite;
     }
 }

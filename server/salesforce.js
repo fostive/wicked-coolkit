@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 const { Base64Encode } = require('base64-stream');
 const normalizeUrl = require('normalize-url');
+const jsforce = require('jsforce');
 
 const random = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
@@ -98,7 +99,7 @@ const getImage = async (sf, imageId) => {
                     return res.body;
                 }
                 throw new Error(
-                    `HTTP Error Response: ${res.status} ${res.statusText}`
+                    `Error fetching image data: ${res.status} ${res.statusText}`
                 );
             })
             .then(
@@ -178,10 +179,144 @@ const getWebring = async (sf, currentWebsite) => {
     };
 };
 
-module.exports = {
+// All query methods that will be exposed to the server
+const methods = {
     getContact,
     getStickers,
     getImage,
     getWebring,
     getRandomWebringForSticker
+};
+
+// Custom errors that should be responded to differently on the client
+class AuthError extends Error {
+    constructor() {
+        super(
+            'A connection could not be made to the Salesforce instance. Please <a href="{{host}}/api/auth?redirect_host={{host}}" target="_blank">click here</a> to continue setup.'
+        );
+        this.errorCode = 'SF_AUTH';
+        this.statusCode = 401;
+    }
+}
+
+class RefreshError extends Error {
+    constructor(message) {
+        super('The Salesforce token could not be refreshed');
+        this.internalMessage = message;
+        this.errorCode = 'SF_AUTH_REFRESH';
+        this.statusCode = 401;
+    }
+}
+
+class SetupError extends Error {
+    constructor(message, sf) {
+        super(
+            `The Salesforce instance has not been setup with data. Please <a href="${sf.instanceUrl}" target="_blank">click here</a> to continue setup.`
+        );
+        this.internalMessage = message;
+        this.errorCode = 'SF_SETUP';
+        this.statusCode = 500;
+    }
+}
+
+module.exports.init = (sfConfig, db) => {
+    let sf = null;
+
+    const connect = (c) => {
+        if (c && c.instanceUrl && c.accessToken) {
+            sf = new jsforce.Connection({
+                instanceUrl: c.instanceUrl,
+                accessToken: c.accessToken
+            });
+        }
+    };
+
+    const refresh = async () => {
+        const auth = await db.getAuth();
+
+        const params = new URLSearchParams();
+        params.append('refresh_token', auth.refreshToken);
+        params.append('login_url', sfConfig.loginUrl);
+
+        const res = await fetch(`${sfConfig.authUrl}/refresh`, {
+            method: 'post',
+            body: params
+        });
+
+        if (!res.ok) {
+            throw new RefreshError(`${res.status} ${res.statusText}`);
+        }
+
+        const refreshAuth = await res.json().then((d) => ({
+            accessToken: d.access_token,
+            instanceUrl: d.instance_url
+        }));
+
+        await db.refreshAuth(refreshAuth);
+        connect(refreshAuth);
+
+        return {
+            ...auth,
+            ...refreshAuth
+        };
+    };
+
+    const login = async () => connect(await db.getAuth());
+
+    const wrapApiMethod = (rawMethod) => async (...args) => {
+        // try to login first
+        if (sf === null) {
+            await login();
+        }
+
+        const method = () => {
+            // Check if sf instance has been created, if not throw an error
+            if (sf === null) {
+                throw new AuthError();
+            }
+
+            return rawMethod(sf, ...args);
+        };
+
+        return method()
+            .catch((e) => {
+                // If any API calls results in a refresh token error
+                // attempt to refresh once
+                // TODO: fix this errorcode check
+                if (e.errorCode === 'TOKEN_REFRESH') {
+                    return refresh();
+                }
+
+                throw e;
+            })
+
+            .then((res) => {
+                // If refresh is successful, attempt api call again
+                if (res.accessToken) {
+                    return method();
+                }
+
+                return res;
+            })
+            .catch((e) => {
+                console.log('JSForce Error:', e);
+
+                // These errors mean data has not been setup yet
+                if (e.errorCode === 'INVALID_FIELD') {
+                    // TODO: are there other salesfroce error codes that mean the data has not been setup properly?
+                    throw new SetupError(e.message, sf);
+                }
+
+                throw e;
+            });
+    };
+
+    return {
+        ...Object.keys(methods).reduce((acc, key) => {
+            acc[key] = wrapApiMethod(methods[key]);
+            return acc;
+        }, {}),
+        login,
+        connect
+    };
 };

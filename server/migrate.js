@@ -3,11 +3,11 @@ const { PGStorage } = require('@robotty/umzug-postgres-storage');
 const Umzug = require('umzug');
 const path = require('path');
 
-module.exports = async (config) => {
+const createUmzug = async (config) => {
     const dbPool = new Pool(config);
     const db = await dbPool.connect();
 
-    const umzug = new Umzug({
+    return new Umzug({
         storage: new PGStorage(db, {
             tableName: 'migrations',
             columnName: 'id'
@@ -17,6 +17,14 @@ module.exports = async (config) => {
             params: [db]
         }
     });
+};
 
+module.exports = async (config) => {
+    const umzug = await createUmzug(config);
     return umzug.up();
+};
+
+module.exports.down = async (config) => {
+    const umzug = await createUmzug(config);
+    return umzug.down();
 };

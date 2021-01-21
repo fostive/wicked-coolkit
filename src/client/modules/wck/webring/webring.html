@@ -2,7 +2,7 @@
     <div class="container">
         <div class="webring light-mode">
             <div class="description-container">
-                <div if:true={error} class="error">{error}</div>
+                <div class="error-message" lwc:dom="manual"></div>
                 <div if:true={loading} class="loading">Loading...</div>
                 <div class="description">
                     <a if:true={name} href={url} class="home">{name}</a>
@@ -10,8 +10,8 @@
                 </div>
             </div>
             <nav if:true={success}>
-                <a href={prevHref} class="previous" onclick={onLinkClick}
-                    ><svg
+                <a href={prevHref} class="previous" onclick={onLinkClick}>
+                    <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="12"
                         height="20"
@@ -26,10 +26,10 @@
                             stroke-width="2"
                         ></polyline>
                     </svg>
-                    Previous</a
-                >
-                <a href={nextHref} class="next" onclick={onLinkClick}
-                    >Next
+                    Previous
+                </a>
+                <a href={nextHref} class="next" onclick={onLinkClick}>
+                    Next
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="12"
@@ -43,8 +43,9 @@
                             stroke-linecap="round"
                             stroke-linejoin="round"
                             stroke-width="2"
-                        ></polyline></svg
-                ></a>
+                        ></polyline>
+                    </svg>
+                </a>
             </nav>
         </div>
     </div>

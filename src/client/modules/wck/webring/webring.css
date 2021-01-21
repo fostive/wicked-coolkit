@@ -40,6 +40,10 @@
     text-decoration: underline;
 }
 
+.webring .error-message a {
+    text-decoration: underline;
+}
+
 .webring .description-container,
 .webring nav {
     padding: 8px 12px;

@@ -20,20 +20,20 @@ export default class HitCounter extends LightningElement {
     }
 
     async postCount() {
-        const res = await fetch(
-            `${host.api(this.host)}/hitCounter?site=${window.location.host}`,
+        const { data, error } = await host.fetchInitial(
+            this,
+            `/hitCounter?site=${window.location.host}`,
             {
                 method: 'POST'
             }
         );
 
-        if (!res.ok) {
-            this.renderCount('ERROR!!!');
+        if (error) {
+            this.renderCount('ERROR'.padEnd(DIGIT_COUNT, '!'));
             return;
         }
 
-        const { count } = await res.json();
-        this.renderCount(count);
+        this.renderCount(data.count);
     }
 
     renderCount(count) {

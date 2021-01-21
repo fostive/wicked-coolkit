@@ -7,7 +7,6 @@ export default class TradingCard extends LightningElement {
     imgSrc = null;
     website = null;
     strengths = null;
-    error = null;
     loading = true;
 
     @api host = null;
@@ -77,49 +76,45 @@ export default class TradingCard extends LightningElement {
         );
     }
 
+    _error = null;
+    get error() {
+        return this._error;
+    }
+
+    set error(e) {
+        this._error = e;
+        // eslint-disable-next-line @lwc/lwc/no-inner-html
+        this.template.querySelector('.error-message').innerHTML = e || '';
+    }
+
     connectedCallback() {
         this.fetchCard();
     }
 
     async fetchCard() {
-        this.loading = true;
-        const res = await fetch(`${host.api(this.host)}/tradingCard`);
-        this.loading = false;
+        const { data, error } = await host.fetchInitial(this, '/tradingCard');
 
-        if (!res.ok) {
-            this.error = 'There was an error loading the trading card.';
+        if (error) {
+            this.error = error;
             return;
         }
 
-        const {
-            name,
-            email,
-            bio,
-            website,
-            img,
-            twitter,
-            codepen,
-            instagram,
-            github,
-            linkedin,
-            stickers,
-            strengths
-        } = await res.json();
+        this.error = null;
 
-        this.displayName = name;
-        this.description = bio;
-        this.imgSrc = img;
-        this.strengths = strengths;
+        this.displayName = data.name;
+        this.description = data.bio;
+        this.imgSrc = data.img;
+        this.strengths = data.strengths;
 
-        this.website = website;
+        this.website = data.website;
 
-        this._email = email;
-        this._twitter = twitter;
-        this._codepen = codepen;
-        this._instagram = instagram;
-        this._github = github;
-        this._linkedin = linkedin;
+        this._email = data.email;
+        this._twitter = data.twitter;
+        this._codepen = data.codepen;
+        this._instagram = data.instagram;
+        this._github = data.github;
+        this._linkedin = data.linkedin;
 
-        this._stickers = stickers;
+        this._stickers = data.stickers;
     }
 }
