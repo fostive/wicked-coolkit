@@ -1,4 +1,4 @@
-const isLocal = () => window.location.host === 'localhost:3001';
+const isLocal = () => window.location.hostname === 'localhost';
 
 const getHost = (host) => {
     const protocol = isLocal() ? 'http' : 'https';
