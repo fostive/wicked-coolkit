@@ -10,8 +10,7 @@
         "port": "$PORT"
     },
     "salesforce": {
-        "username": "$SALESFORCE_USER",
-        "password": "$SALESFORCE_PASSWORD",
-        "url": "$SALESFORCE_URL"
+        "loginUrl": "$SALESFORCE_URL",
+        "authUrl": "$SALESFORCE_AUTH_URL"
     }
 }

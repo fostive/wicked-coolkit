@@ -2,23 +2,11 @@ const compression = require('compression');
 const helmet = require('helmet');
 const express = require('express');
 const cors = require('cors');
-const jsforce = require('jsforce');
 const deepmerge = require('deepmerge');
 const pgp = require('pg-promise')();
-const _sfQueries = require('./salesforce');
-const _dbQueries = require('./db');
+const { init: sfInit } = require('./salesforce');
+const _db = require('./db');
 const migrate = require('./migrate');
-
-const apiHandler = (fn) => async (req, res) => {
-    try {
-        const apiRes = await fn(req, res);
-        return apiRes;
-    } catch (e) {
-        console.log(e);
-        res.statusCode = 500;
-        return res.json({ error: 'An unknown error occurred' });
-    }
-};
 
 const bindMethods = (obj, ...params) =>
     Object.keys(obj).reduce((acc, key) => {
@@ -33,12 +21,28 @@ module.exports = ({
     helmet: helmetConfig = {}
 }) => {
     const app = express();
-    const pg = pgp(pgConfig);
-    const sf = new jsforce.Connection({ loginUrl: sfConfig.url });
-    const sfLogin = sf.login(sfConfig.username, sfConfig.password);
+    const db = bindMethods(_db, { ...pgp, db: pgp(pgConfig) });
+    const sf = sfInit(sfConfig, db);
 
-    const sfQueries = bindMethods(_sfQueries, sf);
-    const dbQueries = bindMethods(_dbQueries, pg);
+    const apiHandler = (fn) => async (req, res) => {
+        try {
+            const apiRes = await fn(req, res);
+            return apiRes;
+        } catch (e) {
+            // Handle errors from the JSForce library by showing the specific message
+            if (e.jsfErrorCode) {
+                res.statusCode = e.statusCode || 500;
+                return res.json({
+                    message: e.message,
+                    code: e.jsfErrorCode
+                });
+            }
+
+            console.error('API Error:', e);
+            res.statusCode = 500;
+            return res.json({ error: 'An error occurred' });
+        }
+    };
 
     if (process.env.NODE_ENV === 'production') {
         app.use(
@@ -67,7 +71,7 @@ module.exports = ({
     app.get(
         '/api/hitCounter',
         apiHandler(async (req, res) => {
-            const hits = await dbQueries.getHits(req.query.site);
+            const hits = await db.getHits(req.query.site);
             return res.json(hits);
         })
     );
@@ -75,8 +79,8 @@ module.exports = ({
     app.post(
         '/api/hitCounter',
         apiHandler(async (req, res) => {
-            await dbQueries.incrementHits(req.query.site);
-            const hits = await dbQueries.getHits(req.query.site);
+            await db.incrementHits(req.query.site);
+            const hits = await db.getHits(req.query.site);
             return res.json(hits);
         })
     );
@@ -84,11 +88,11 @@ module.exports = ({
     app.get(
         '/api/tradingCard',
         apiHandler(async (req, res) => {
-            const contact = await sfQueries.getContact();
+            const contact = await sf.getContact();
 
             const [img, stickers] = await Promise.all([
-                sfQueries.getImage(contact.pictureId),
-                sfQueries.getStickers(contact.id)
+                sf.getImage(contact.pictureId),
+                sf.getStickers(contact.id)
             ]);
 
             return res.json({
@@ -102,9 +106,7 @@ module.exports = ({
     app.get(
         '/api/sticker',
         apiHandler(async (req, res) => {
-            const url = await sfQueries.getRandomWebringForSticker(
-                req.query.id
-            );
+            const url = await sf.getRandomWebringForSticker(req.query.id);
             res.redirect(url);
         })
     );
@@ -112,15 +114,52 @@ module.exports = ({
     app.get(
         '/api/webring',
         apiHandler(async (req, res) => {
-            const webring = await sfQueries.getWebring(req.query.site);
+            const webring = await sf.getWebring(req.query.site);
             res.json(webring);
         })
     );
 
+    app.get('/api/auth', (req, res) => {
+        res.redirect(
+            `${sfConfig.authUrl}/connect?redirect_uri=${req.query.redirect_host}/api/auth-redirect&login_url=${sfConfig.loginUrl}`
+        );
+    });
+
+    app.get('/api/auth-redirect', async (req, res) => {
+        const {
+            access_token: accessToken,
+            refresh_token: refreshToken,
+            instance_url: instanceUrl
+        } = req.query;
+
+        if (!accessToken || !refreshToken || !instanceUrl) {
+            throw new Error('Error during Salesforce auth');
+        }
+
+        sf.connect({
+            instanceUrl,
+            accessToken
+        });
+
+        await db.saveAuth({
+            instanceUrl,
+            accessToken,
+            refreshToken
+        });
+
+        res.redirect('/');
+    });
+
+    app.get('/api/setup', (req, res) => {
+        res.redirect(
+            (sf && sf.instanceUrl) || `/api/auth?${req.query.redirect_host}`
+        );
+    });
+
     const start = () =>
         Promise.all([
             migrate(pgConfig),
-            sfLogin,
+            sf.login(),
             new Promise((resolve) => app.listen(appConfig.port, resolve))
         ]);
 
@@ -128,6 +167,6 @@ module.exports = ({
         start,
         app,
         sf,
-        pg
+        db
     };
 };

@@ -166,7 +166,7 @@
             </section>
             <section class="dev-desc">
                 <p if:true={loading}>Loading...</p>
-                <p if:true={error}>{error}</p>
+                <p class="error-message" lwc:dom="manual"></p>
                 <p if:true={description} class="description">{description}</p>
                 <ul if:true={strengths} class="strengths">
                     <h2>Feats of strength</h2>
