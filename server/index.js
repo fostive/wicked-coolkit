@@ -156,12 +156,11 @@ module.exports = ({
         );
     });
 
-    const start = () =>
-        Promise.all([
-            migrate(pgConfig),
-            sf.login(),
-            new Promise((resolve) => app.listen(appConfig.port, resolve))
-        ]);
+    const start = async () => {
+        await migrate(pgConfig);
+        await sf.login();
+        await new Promise((resolve) => app.listen(appConfig.port, resolve));
+    };
 
     return {
         start,
