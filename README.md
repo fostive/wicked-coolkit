@@ -1,16 +1,10 @@
-# heroku-wicked-coolkit
+# wicked-coolkit
 
-Just a place for me to put some things for now.
+This is the `wicked-coolkit` package. It is best used by going to [http://wickedcoolkit.com](wickedcoolkit.com) and following the instructions there.
 
--   [Google doc with Heroku team](https://docs.google.com/document/d/1t8U1MyEGYhLsSJ-1dwmGf-QbldGaLrADjOcpWfW-63E/edit)
--   [Artwork and things](https://www.dropbox.com/sh/9vpgvgjpj1dpr4n/AAD2uC69Io4UurOauaNG2SnLa?dl=0)
+## Local Dev
 
-## Docs
-
--   Create a database with `createdb heroku-wicked-coolkit`
--   `npx knex migrate:latest`
-
-## How to start?
+This repo contains the Express server and the source for the Lightning Web Components.
 
 Start simple by running `yarn watch` (or `npm run watch`, if you set up the project with `npm`). This will start the project with a local development server.
 

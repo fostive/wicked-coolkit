@@ -11,6 +11,6 @@
     },
     "salesforce": {
         "loginUrl": "$SALESFORCE_URL",
-        "authUrl": "$SALESFORCE_AUTHURL"
+        "authUrl": "$SALESFORCE_AUTH_URL"
     }
 }
