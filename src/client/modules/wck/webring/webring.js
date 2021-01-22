@@ -30,17 +30,19 @@ export default class Webring extends LightningElement {
     }
 
     async onLinkClick(e) {
-        const { data } = await host.fetchData(
+        const [data] = await host.fetchData(
             this,
             `/webring?site=${e.target.getAttribute('href')}`
         );
 
-        this.prevHref = data.prevWebsite;
-        this.nextHref = data.nextWebsite;
+        if (data) {
+            this.prevHref = data.prevWebsite;
+            this.nextHref = data.nextWebsite;
+        }
     }
 
     async fetchData() {
-        const { data, error } = await host.fetchInitial(
+        const [data, error] = await host.fetchInitial(
             this,
             `/webring?site=${window.location.href}`
         );

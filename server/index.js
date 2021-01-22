@@ -30,11 +30,11 @@ module.exports = ({
             return apiRes;
         } catch (e) {
             // Handle errors from the JSForce library by showing the specific message
-            if (e.errorCode) {
-                res.statusCode = e.statusCode;
+            if (e.jsfErrorCode) {
+                res.statusCode = e.statusCode || 500;
                 return res.json({
                     message: e.message,
-                    code: e.errorCode
+                    code: e.jsfErrorCode
                 });
             }
 
@@ -148,6 +148,12 @@ module.exports = ({
         });
 
         res.redirect('/');
+    });
+
+    app.get('/api/setup', (req, res) => {
+        res.redirect(
+            (sf && sf.instanceUrl) || `/api/auth?${req.query.redirect_host}`
+        );
     });
 
     const start = () =>

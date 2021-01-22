@@ -61,11 +61,7 @@ module.exports.saveAuth = async (
     await db.none(query);
 };
 
-module.exports.refreshAuth = async (
-    db,
-    helpers,
-    { accessToken, instanceUrl }
-) => {
+module.exports.refreshAuth = async ({ db }, { accessToken, instanceUrl }) => {
     await db.none(
         `UPDATE auth SET access_token = $1, instance_url = $2 WHERE id = $3`,
         [accessToken, instanceUrl, USER_ID]

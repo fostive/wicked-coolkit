@@ -92,7 +92,7 @@ export default class TradingCard extends LightningElement {
     }
 
     async fetchCard() {
-        const { data, error } = await host.fetchInitial(this, '/tradingCard');
+        const [data, error] = await host.fetchInitial(this, '/tradingCard');
 
         if (error) {
             this.error = error;
