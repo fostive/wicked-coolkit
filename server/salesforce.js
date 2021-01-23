@@ -32,18 +32,9 @@ const findWebringUrlIndex = (webring, url) => {
 class AuthError extends Error {
     constructor() {
         super(
-            'A connection could not be made to the Salesforce instance. Please <a href="{{host}}/api/auth?redirect_host={{host}}" target="_blank">click here</a> to continue setup.'
+            'The component could not make a connection to Salesforce. Please <a href="{{host}}/api/auth?redirect_host={{host}}" target="_blank">authenticate</a> to continue setup.'
         );
         this.jsfErrorCode = 'SF_AUTH';
-        this.statusCode = 401;
-    }
-}
-
-class RefreshError extends Error {
-    constructor(message) {
-        super('The Salesforce token could not be refreshed');
-        this.internalMessage = message;
-        this.jsfErrorCode = 'SF_AUTH_REFRESH';
         this.statusCode = 401;
     }
 }
@@ -51,7 +42,7 @@ class RefreshError extends Error {
 class SetupError extends Error {
     constructor(message, sf) {
         super(
-            `The Salesforce instance has not been setup with data. Please <a href="${sf.instanceUrl}" target="_blank">click here</a> to continue setup.`
+            `The component could not fetch the data from Salesforce. Please <a href="${sf.instanceUrl}" target="_blank">enter your data</a> to continue setup.`
         );
         this.internalMessage = message;
         this.jsfErrorCode = 'SF_SETUP';
@@ -254,6 +245,10 @@ module.exports.init = (sfConfig, db) => {
     const refresh = async () => {
         const auth = await db.getAuth();
 
+        if (!auth || !auth.refreshToken) {
+            throw new AuthError('No refresh token was found');
+        }
+
         const params = new URLSearchParams();
         params.append('refresh_token', auth.refreshToken);
         params.append('login_url', sfConfig.loginUrl);
@@ -264,7 +259,9 @@ module.exports.init = (sfConfig, db) => {
         });
 
         if (!res.ok) {
-            throw new RefreshError(`${res.status} ${res.statusText}`);
+            throw new AuthError(
+                `Error refreshing token: ${res.status} ${res.statusText}`
+            );
         }
 
         const refreshAuth = await res.json().then((d) => ({
@@ -311,7 +308,7 @@ module.exports.init = (sfConfig, db) => {
 
             .then((res) => {
                 // If refresh is successful, attempt api call again
-                if (res.accessToken) {
+                if (res && res.accessToken) {
                     return method();
                 }
 

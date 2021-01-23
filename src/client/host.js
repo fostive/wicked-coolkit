@@ -24,7 +24,7 @@ export const fetchData = async (...args) => {
         const data = await res.json();
         return res.ok ? [data, null] : [null, data];
     } catch (e) {
-        return [null, { message: res.statusText }];
+        return [null, { message: res.statusText || 'An error occurred' }];
     }
 };
 
@@ -36,7 +36,7 @@ export const fetchInitial = async (instance, path, options) => {
 
     try {
         const [resData, resError] = await fetchData(instance, path, options);
-        if (error) {
+        if (resError) {
             // An error with a code means we should show the message
             error = resError.code ? resError.message : 'An error occurred';
             error = error.replace(/\{\{host\}\}/g, getHost(instance.host));
