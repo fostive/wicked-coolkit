@@ -332,6 +332,9 @@ module.exports.init = (sfConfig, db) => {
             return acc;
         }, {}),
         login,
-        connect
+        connect,
+        get connection() {
+            return sf;
+        }
     };
 };

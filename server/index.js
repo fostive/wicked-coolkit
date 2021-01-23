@@ -151,8 +151,9 @@ module.exports = ({
     });
 
     app.get('/api/setup', (req, res) => {
+        const instanceUrl = sf && sf.connection && sf.connection.instanceUrl;
         res.redirect(
-            (sf && sf.instanceUrl) || `/api/auth?${req.query.redirect_host}`
+            instanceUrl || `/api/auth?redirect_host=${req.query.redirect_host}`
         );
     });
 
