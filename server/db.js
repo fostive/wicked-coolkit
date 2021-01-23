@@ -55,7 +55,7 @@ module.exports.saveAuth = async (
     };
 
     const query = `${helpers.insert(data, authCs)}
-        ON CONFLICT(id, refresh_token) DO UPDATE SET 
+        ON CONFLICT(id) DO UPDATE SET 
         ${authCs.assignColumns({ from: 'EXCLUDED', skip: 'id' })}`;
 
     await db.none(query);
