@@ -59,12 +59,8 @@
     font-weight: normal;
 }
 
-.webring .description span:before {
+.webring .description .description-text:before {
     content: ' / ';
-}
-
-.webring .description a {
-    font-weight: bold;
 }
 
 .webring nav {

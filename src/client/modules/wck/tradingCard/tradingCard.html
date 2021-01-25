@@ -178,9 +178,15 @@
         </div>
         <div class="back">
             <template for:each={stickers} for:item="sticker">
+                <!--
+                TODO: add this back in once sticker webrings are a thing
                 <a key={sticker.id} href={sticker.href} class="sticker">
                     <img src={sticker.imgSrc} alt={sticker.imgAlt} />
                 </a>
+                -->
+                <span key={sticker.id} class="sticker">
+                    <img src={sticker.imgSrc} alt={sticker.imgAlt} />
+                </span>
             </template>
         </div>
     </div>

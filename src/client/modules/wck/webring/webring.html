@@ -5,8 +5,10 @@
                 <div class="error-message" lwc:dom="manual"></div>
                 <div if:true={loading} class="loading">Loading...</div>
                 <div class="description">
-                    <a if:true={name} href={url} class="home">{name}</a>
-                    <span if:true={description}>{description}</span>
+                    <span if:true={name} class="home">{name}</span>
+                    <span if:true={description} class="description-text"
+                        >{description}</span
+                    >
                 </div>
             </div>
             <nav if:true={success}>

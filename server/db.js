@@ -1,10 +1,12 @@
+const normalizeUrl = require('./normalizeUrl');
+
 // Hardcode user id for now since there is only one user per server
 const USER_ID = 'DEFAULT_USER';
 
 module.exports.getHits = async ({ db }, site) => {
     const hits = await db.oneOrNone(
         'SELECT count from hit_counter WHERE site = $1',
-        [site]
+        [normalizeUrl(site)]
     );
     return hits || { count: 0 };
 };
@@ -12,7 +14,7 @@ module.exports.getHits = async ({ db }, site) => {
 module.exports.incrementHits = async ({ db }, site) => {
     const updated = await db.result(
         'UPDATE hit_counter SET count = count + 1 WHERE site = $1',
-        [site]
+        [normalizeUrl(site)]
     );
 
     if (updated.rowCount === 0) {

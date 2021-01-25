@@ -1,8 +1,8 @@
 # Jest coverage
 coverage/
 
-# Default lib folder
-lib/
+# Built site files
+public/
 
 # Default dist folder
 dist/

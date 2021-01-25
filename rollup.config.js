@@ -3,6 +3,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 import { terser } from 'rollup-plugin-terser';
+import copy from 'rollup-plugin-copy';
 
 export default {
     input: {
@@ -25,6 +26,9 @@ export default {
         replace({
             'process.env.NODE_ENV': JSON.stringify('production')
         }),
-        terser()
+        terser(),
+        copy({
+            targets: [{ src: 'stickers', dest: 'dist' }]
+        })
     ]
 };

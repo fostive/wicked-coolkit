@@ -9,11 +9,8 @@ export const api = (host) => {
     return `${getHost(host)}/api`;
 };
 
-export const sticker = (s) => {
-    return isLocal()
-        ? `/stickers/svg/${s}.svg`
-        : `https://unpkg.com/wicked-coolkit/dist/stickers/svg/${s}.svg`;
-};
+export const sticker = (s) =>
+    `https://unpkg.com/wicked-coolkit/dist/stickers/svg/${s}.svg`;
 
 const fetchApi = (instance, path, options) =>
     fetch(api(instance.host) + path, options);

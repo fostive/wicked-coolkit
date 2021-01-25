@@ -120,12 +120,16 @@ module.exports = ({
     );
 
     app.get('/api/auth', (req, res) => {
+        res.json({ auth: !!sf.connection });
+    });
+
+    app.get('/sf/auth', (req, res) => {
         res.redirect(
-            `${sfConfig.authUrl}/connect?redirect_uri=${req.query.redirect_host}/api/auth-redirect&login_url=${sfConfig.loginUrl}`
+            `${sfConfig.authUrl}/connect?redirect_uri=${req.query.redirect_host}/sf/auth-callback&login_url=${sfConfig.loginUrl}`
         );
     });
 
-    app.get('/api/auth-redirect', async (req, res) => {
+    app.get('/sf/auth-callback', async (req, res) => {
         const {
             access_token: accessToken,
             refresh_token: refreshToken,
@@ -147,13 +151,22 @@ module.exports = ({
             refreshToken
         });
 
-        res.redirect('/');
+        res.redirect('/getting-started');
     });
 
-    app.get('/api/setup', (req, res) => {
+    const pages = {
+        card: '/lightning/n/Trading_Card',
+        webring: '/lightning/n/Webring'
+    };
+
+    app.get('/sf/setup', (req, res) => {
         const instanceUrl = sf && sf.connection && sf.connection.instanceUrl;
+        const { redirect_host, page } = req.query;
+        const instancePage = pages[page] || pages.card;
         res.redirect(
-            instanceUrl || `/api/auth?redirect_host=${req.query.redirect_host}`
+            instanceUrl
+                ? instanceUrl + instancePage
+                : `/sf/auth?redirect_host=${redirect_host}`
         );
     });
 

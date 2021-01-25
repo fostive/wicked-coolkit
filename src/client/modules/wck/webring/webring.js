@@ -52,7 +52,6 @@ export default class Webring extends LightningElement {
             return;
         }
 
-        this.url = data.url;
         this.name = data.name;
         this.description = data.description;
         this.prevHref = data.prevWebsite;
