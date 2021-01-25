@@ -10,6 +10,9 @@ logs
 # Standard dist folder
 /dist
 
+# Built site files
+/public
+
 # Tooling files
 node_modules
 

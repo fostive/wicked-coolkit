@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 const { Base64Encode } = require('base64-stream');
-const normalizeUrl = require('normalize-url');
+const normalizeUrl = require('./normalizeUrl');
 const jsforce = require('jsforce');
 
 // Utils
@@ -19,13 +19,8 @@ const wrapArr = (arr, index, dir) => {
     return arr[nextIndex];
 };
 
-const normalizeWebringUrl = (u) =>
-    normalizeUrl(u, { stripHash: true, stripProtocol: true });
-
 const findWebringUrlIndex = (webring, url) => {
-    return url
-        ? webring.map(normalizeWebringUrl).indexOf(normalizeWebringUrl(url))
-        : -1;
+    return url ? webring.map(normalizeUrl).indexOf(normalizeUrl(url)) : -1;
 };
 
 // Custom errors that should be responded to differently on the client
@@ -146,7 +141,9 @@ const _getWebringWebsites = (sf, webringId) => {
             (SELECT Website__c
             FROM Website_Webring_Association__c
             WHERE Webring__c = '${webringId}')
-            ORDER BY Name` // TODO: change this to a deterministic order field
+            ORDER BY Name`
+            // TODO: order by a different field? Or remove this and it will be the default order?
+            // https://github.com/crcastle/weirdos-salesforce-app/issues/24
         )
         .then(({ records }) => records)
         .then((websites) => {
@@ -161,7 +158,8 @@ const _getWebringWebsites = (sf, webringId) => {
 };
 
 const getRandomWebringForSticker = async (sf, stickerId) => {
-    // TODO: confirm this is the right query once the stickers are uploaded
+    // TODO: update this query to fetch from a global instance (maybe?)
+    // https://github.com/crcastle/weirdos-salesforce-app/issues/29
     const webringId = await sf
         .query(
             `SELECT Id
@@ -181,8 +179,6 @@ const getRandomWebringForSticker = async (sf, stickerId) => {
 };
 
 const getWebring = async (sf, currentWebsite) => {
-    const contact = await getContact(sf);
-
     const webring = await sf
         .query(
             `SELECT Id, Name, Description__c
@@ -213,7 +209,6 @@ const getWebring = async (sf, currentWebsite) => {
         currentIndex === -1 ? websites[0] : wrapArr(websites, currentIndex, 1);
 
     return {
-        url: contact.website,
         name: webring.name,
         description: webring.description,
         prevWebsite,

@@ -10,10 +10,7 @@ const { start, app } = server({
     }
 });
 
-app.use(express.static('./dist'));
-app.use('*', (req, res) => {
-    res.sendFile(require('path').resolve('./dist', 'index.html'));
-});
+app.use(express.static('./public'));
 
 start()
     .then(() =>
