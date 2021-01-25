@@ -27,7 +27,7 @@ const findWebringUrlIndex = (webring, url) => {
 class AuthError extends Error {
     constructor() {
         super(
-            'The component could not make a connection to Salesforce. Please <a href="{{host}}/api/auth?redirect_host={{host}}" target="_blank">authenticate</a> to continue setup.'
+            'The component could not make a connection to Salesforce. Please <a href="{{host}}/sf/auth?redirect_host={{host}}" target="_blank">authenticate</a> to continue setup.'
         );
         this.jsfErrorCode = 'SF_AUTH';
         this.statusCode = 401;
