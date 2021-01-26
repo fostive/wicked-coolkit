@@ -225,7 +225,7 @@ const methods = {
     getRandomWebringForSticker
 };
 
-module.exports.init = (sfConfig, db) => {
+module.exports.init = ({ loginUrl, authUrl }, db) => {
     let sf = null;
 
     const connect = (c) => {
@@ -246,9 +246,9 @@ module.exports.init = (sfConfig, db) => {
 
         const params = new URLSearchParams();
         params.append('refresh_token', auth.refreshToken);
-        params.append('login_url', sfConfig.loginUrl);
+        params.append('login_url', loginUrl);
 
-        const res = await fetch(`${sfConfig.authUrl}/refresh`, {
+        const res = await fetch(`${authUrl}/refresh`, {
             method: 'post',
             body: params
         });

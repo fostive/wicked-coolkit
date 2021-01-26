@@ -1,21 +1,23 @@
+require('dotenv').config();
 const express = require('express');
-const config = require('getconfig');
 const server = require('./server/index.js');
 
 const { start, app } = server({
-    sf: config.salesforce,
-    pg: config.db,
-    app: {
-        port: config.host.port
-    }
+    loginUrl: process.env.SALESFORCE_URL,
+    authUrl: process.env.SALESFORCE_AUTH_URL,
+    pg: process.env.DATABASE_URL
 });
 
 app.use(express.static('./public'));
 
 start()
-    .then(() =>
+    .then(({ port }) =>
         console.log(
-            `Server started: http://${config.host.name}:${config.host.port}/`
+            `Server started on ${
+                process.env.NODE_ENV === 'production'
+                    ? 'port '
+                    : 'http://localhost:'
+            }${port}`
         )
     )
     .catch(console.error);
