@@ -174,7 +174,6 @@ module.exports = ({
 
     const pages = {
         card: '/lightning/n/Trading_Card',
-        // TODO: fix webring path
         webring: '/lightning/n/Webring'
     };
 
