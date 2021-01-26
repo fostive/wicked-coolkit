@@ -1,5 +1,5 @@
 import { LightningElement, api } from 'lwc';
-import * as host from '../../../host';
+import * as util from '../../util';
 
 const DIGIT_COUNT = 8;
 
@@ -20,7 +20,7 @@ export default class HitCounter extends LightningElement {
     }
 
     async postCount() {
-        const [data, error] = await host.fetchInitial(
+        const [data, error] = await util.fetchInitial(
             this,
             `/hitCounter?site=${window.location.host}`,
             {
