@@ -2,7 +2,7 @@
 // https://github.com/muenzpraeger/create-lwc-app/blob/main/packages/lwc-services/example/lwc-services.config.js
 module.exports = {
     buildDir: './public',
-    sourceDir: './src/client',
+    sourceDir: './client',
     devServer: {
         proxy: { '/': 'http://localhost:3002' }
     }

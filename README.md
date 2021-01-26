@@ -12,7 +12,7 @@ Run `npm run build && npm run serve` to serve a production version of the built 
 
 Run `npm run dist` to package all the code and assets for publishing to npm.
 
-All web components are within the [`src/client/modules`](./src/client/modules) folder. The Express server and related database and Salesforce routes can be found in the [`src/server`](./server) folder.
+All web components are within the [`client/modules`](./client/modules) folder. The Express server and related database and Salesforce routes can be found in the [`server`](./server) folder.
 
 When running locally (and testing against a local database and Salesforce scratch org), you can create a `.env` file with the following variables:
 

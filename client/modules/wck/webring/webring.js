@@ -1,5 +1,5 @@
 import { LightningElement, api } from 'lwc';
-import * as host from '../../../host';
+import * as util from '../../util';
 
 export default class Webring extends LightningElement {
     name = null;
@@ -30,7 +30,7 @@ export default class Webring extends LightningElement {
     }
 
     async onLinkClick(e) {
-        const [data] = await host.fetchData(
+        const [data] = await util.fetchData(
             this,
             `/webring?site=${e.target.getAttribute('href')}`
         );
@@ -42,7 +42,7 @@ export default class Webring extends LightningElement {
     }
 
     async fetchData() {
-        const [data, error] = await host.fetchInitial(
+        const [data, error] = await util.fetchInitial(
             this,
             `/webring?site=${window.location.href}`
         );

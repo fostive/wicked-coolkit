@@ -5,10 +5,11 @@ import replace from '@rollup/plugin-replace';
 import { terser } from 'rollup-plugin-terser';
 import copy from 'rollup-plugin-copy';
 import virtual from '@rollup/plugin-virtual';
+import del from 'rollup-plugin-delete';
 
 const generateComponentInput = (name) => {
     const tagName = name.replace(/[A-Z]/g, (l) => `-${l.toLowerCase()}`);
-    return `import Component from './src/client/modules/wck/${name}/${name}';
+    return `import Component from './client/modules/wck/${name}/${name}';
     customElements.define('wck-${tagName}', Component.CustomElementConstructor);`;
 };
 
@@ -30,7 +31,7 @@ export default {
         virtual(components(generateComponentInput)),
         resolve({ browser: true }),
         lwcCompiler({
-            rootDir: './src/client/modules'
+            rootDir: './client/modules'
         }),
         commonjs(),
         replace({
@@ -39,6 +40,7 @@ export default {
         terser(),
         copy({
             targets: [{ src: 'stickers', dest: 'dist' }]
-        })
+        }),
+        del({ targets: 'dist/*' })
     ]
 };

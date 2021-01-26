@@ -33,6 +33,7 @@
         "prettier": "^2.1.2",
         "rollup": "^2.35.1",
         "rollup-plugin-copy": "^3.3.0",
+        "rollup-plugin-delete": "^2.0.0",
         "rollup-plugin-terser": "^7.0.2"
     },
     "engines": {
@@ -45,7 +46,7 @@
         "/dist/hitCounter.js",
         "/dist/tradingCard.js",
         "/dist/webring.js",
-        "/dist/host-*.js",
+        "/dist/util-*.js",
         "/dist/stickers/**/*.{svg,png,zip}"
     ],
     "homepage": "https://github.com/andyet/wicked-coolkit",
