@@ -6,6 +6,7 @@
     "bugs": "https://github.com/andyet/wicked-coolkit/issues",
     "dependencies": {
         "@robotty/umzug-postgres-storage": "^3.0.4",
+        "@rollup/plugin-virtual": "^2.0.3",
         "base64-stream": "^1.0.0",
         "compression": "^1.7.4",
         "cors": "^2.8.5",
