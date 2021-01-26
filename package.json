@@ -47,7 +47,7 @@
         "/dist/tradingCard.js",
         "/dist/webring.js",
         "/dist/util-*.js",
-        "/dist/stickers/**/*.{svg,png,zip}"
+        "/dist/stickers/**/*.{svg,png,zip,csv}"
     ],
     "homepage": "https://github.com/andyet/wicked-coolkit",
     "husky": {
