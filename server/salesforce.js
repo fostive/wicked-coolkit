@@ -141,9 +141,7 @@ const _getWebringWebsites = (sf, webringId) => {
             (SELECT Website__c
             FROM Website_Webring_Association__c
             WHERE Webring__c = '${webringId}')
-            ORDER BY Name`
-            // TODO: order by a different field? Or remove this and it will be the default order?
-            // https://github.com/crcastle/weirdos-salesforce-app/issues/24
+            ORDER BY CreatedDate`
         )
         .then(({ records }) => records)
         .then((websites) => {
