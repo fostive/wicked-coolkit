@@ -141,9 +141,7 @@ const _getWebringWebsites = (sf, webringId) => {
             (SELECT Website__c
             FROM Website_Webring_Association__c
             WHERE Webring__c = '${webringId}')
-            ORDER BY Name`
-            // TODO: order by a different field? Or remove this and it will be the default order?
-            // https://github.com/crcastle/weirdos-salesforce-app/issues/24
+            ORDER BY CreatedDate`
         )
         .then(({ records }) => records)
         .then((websites) => {
@@ -225,7 +223,7 @@ const methods = {
     getRandomWebringForSticker
 };
 
-module.exports.init = (sfConfig, db) => {
+module.exports.init = ({ loginUrl, authUrl }, db) => {
     let sf = null;
 
     const connect = (c) => {
@@ -246,9 +244,9 @@ module.exports.init = (sfConfig, db) => {
 
         const params = new URLSearchParams();
         params.append('refresh_token', auth.refreshToken);
-        params.append('login_url', sfConfig.loginUrl);
+        params.append('login_url', loginUrl);
 
-        const res = await fetch(`${sfConfig.authUrl}/refresh`, {
+        const res = await fetch(`${authUrl}/refresh`, {
             method: 'post',
             body: params
         });

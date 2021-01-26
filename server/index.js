@@ -15,14 +15,32 @@ const bindMethods = (obj, ...params) =>
     }, {});
 
 module.exports = ({
-    pg: pgConfig,
-    sf: sfConfig,
-    app: appConfig,
+    pg: _pgConfig,
+    loginUrl = 'https://login.salesforce.com',
+    authUrl = 'https://wickedcoolkit-oauth.herokuapp.com',
+    port = process.env.PORT || 3002,
     helmet: helmetConfig = {}
 }) => {
+    const pgConfig =
+        typeof _pgConfig === 'string'
+            ? { connectionString: _pgConfig }
+            : _pgConfig;
+
+    if (!pgConfig || !pgConfig.connectionString) {
+        throw new Error(
+            `Must specify a \`pg\` connection string. Received ${_pgConfig}`
+        );
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(pgConfig, 'ssl')) {
+        pgConfig.ssl = pgConfig.connectionString.match(/\blocalhost\b/)
+            ? false
+            : { rejectUnauthorized: false };
+    }
+
     const app = express();
     const db = bindMethods(_db, { ...pgp, db: pgp(pgConfig) });
-    const sf = sfInit(sfConfig, db);
+    const sf = sfInit({ loginUrl: loginUrl, authUrl: authUrl }, db);
 
     const apiHandler = (fn) => async (req, res) => {
         try {
@@ -125,7 +143,7 @@ module.exports = ({
 
     app.get('/sf/auth', (req, res) => {
         res.redirect(
-            `${sfConfig.authUrl}/connect?redirect_uri=${req.query.redirect_host}/sf/auth-callback&login_url=${sfConfig.loginUrl}`
+            `${authUrl}/connect?redirect_uri=${req.query.redirect_host}/sf/auth-callback&login_url=${loginUrl}`
         );
     });
 
@@ -174,7 +192,8 @@ module.exports = ({
     const start = async () => {
         await migrate(pgConfig);
         await sf.login();
-        await new Promise((resolve) => app.listen(appConfig.port, resolve));
+        await new Promise((resolve) => app.listen(port, resolve));
+        return { port };
     };
 
     return {

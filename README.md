@@ -1,13 +1,22 @@
 # wicked-coolkit
 
-This is the `wicked-coolkit` package. It is best used by going to [http://wickedcoolkit.com](wickedcoolkit.com) and following the instructions there.
+A fun, nostalgic web toolkit built on Heroku and Salesforce. Check out [wickedcoolkit.com](https://wickedcoolkit.com) for instructions on how to create your own.
+
+This repo contains the `wicked-coolkit` package, which is both the Lightning Web Components and the accompanying API routes.
 
 ## Local Dev
 
-This repo contains the Express server and the source for the Lightning Web Components.
+Start simple by running `npm run watch`. This will start the project with a local development server.
 
-Start simple by running `yarn watch` (or `npm run watch`, if you set up the project with `npm`). This will start the project with a local development server.
+Run `npm run build && npm run serve` to serve a production version of the built files.
 
-The source files are located in the [`src`](./src) folder. All web components are within the [`src/client/modules`](./src/modules) folder. The folder hierarchy also represents the naming structure of the web components. The entry file for the custom Express configuration can be found in the ['src/server'](./src/server) folder.
+Run `npm run dist` to package all the code and assets for publishing to npm.
 
-Find more information on the main repo on [GitHub](https://github.com/muenzpraeger/create-lwc-app).
+All web components are within the [`src/client/modules`](./src/modules) folder. The Express server and related database and Salesforce routes can be found in the ['src/server'](./src/server) folder.
+
+When running locally (and testing against a local database and Salesforce scratch org), you can create a `.env` file with the following variables:
+
+```sh
+DATABASE_URL=postgres://localhost:5432/heroku-wicked-coolkit
+SALESFORCE_URL=https://test.salesforce.com
+```
