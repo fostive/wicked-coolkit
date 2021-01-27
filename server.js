@@ -10,6 +10,11 @@ const { start, app } = server({
 
 app.use(express.static("./public"));
 
+// The API redirects to /getting-started after auth but
+// since we dont have that page when testing here
+// go back to the index
+app.get("/getting-started", (req, res) => res.redirect("/"));
+
 start()
   .then(({ port }) =>
     console.log(

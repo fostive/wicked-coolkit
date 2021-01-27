@@ -199,10 +199,14 @@ const createHostField = async (sf) => {
 };
 
 const updateHost = async (sf, { userId, host }) => {
-  await sf.sobject("User").update({
-    Id: userId,
-    HerokuAppName__c: host,
-  });
+  try {
+    await sf.sobject("User").update({
+      Id: userId,
+      HerokuAppName__c: host,
+    });
+  } catch (e) {
+    console.log("Could not update user app name", e);
+  }
 };
 
 // All query methods that will be exposed to the server
@@ -217,12 +221,15 @@ const methods = {
 module.exports.init = ({ loginUrl, authUrl }, db) => {
   let sf = null;
 
-  const connect = (c) => {
+  const connect = async (c, isInitial = true) => {
     if (c && c.instanceUrl && c.accessToken) {
       sf = new jsforce.Connection({
         instanceUrl: c.instanceUrl,
         accessToken: c.accessToken,
       });
+      if (isInitial) {
+        await createHostField(sf);
+      }
     }
   };
 
@@ -254,7 +261,7 @@ module.exports.init = ({ loginUrl, authUrl }, db) => {
     }));
 
     await db.refreshAuth(refreshAuth);
-    connect(refreshAuth);
+    await connect(refreshAuth, false);
 
     return {
       ...auth,
