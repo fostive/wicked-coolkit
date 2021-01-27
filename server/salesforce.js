@@ -196,17 +196,24 @@ const createHostField = async (sf) => {
       length: 80,
     },
   ]);
+
+  await sf.metadata.update("Profile", [
+    {
+      fullName: "Admin",
+      fieldPermissions: {
+        field: "User.HerokuAppName__c",
+        readable: true,
+        editable: true,
+      },
+    },
+  ]);
 };
 
 const updateHost = async (sf, { userId, host }) => {
-  try {
-    await sf.sobject("User").update({
-      Id: userId,
-      HerokuAppName__c: host,
-    });
-  } catch (e) {
-    console.log("Could not update user app name", e);
-  }
+  await sf.sobject("User").update({
+    Id: userId,
+    HerokuAppName__c: host,
+  });
 };
 
 // All query methods that will be exposed to the server
