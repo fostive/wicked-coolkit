@@ -159,12 +159,10 @@ module.exports = ({
       return;
     }
 
-    sf.connect({
+    await sf.connect({
       instanceUrl,
       accessToken,
     });
-
-    await sf.createHostField();
 
     const host = new URL("/", redirectUri).host;
 
