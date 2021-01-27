@@ -173,6 +173,8 @@ module.exports = ({
   const pages = {
     card: "/lightning/n/Trading_Card",
     webring: "/lightning/n/Webring",
+    theme: "/lightning/setup/ThemingAndBranding/home",
+    import: "/lightning/setup/DataManagementDataImporter/home",
   };
 
   app.get("/sf/setup", (req, res) => {
