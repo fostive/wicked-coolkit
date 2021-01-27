@@ -18,6 +18,7 @@ module.exports = ({
   pg: _pgConfig,
   loginUrl = "https://login.salesforce.com",
   authUrl = "https://wickedcoolkit-oauth.herokuapp.com",
+  stickerWebringUrl = "https://wicked-coolkit-webring.herokuapp.com/sticker",
   port = process.env.PORT || 3002,
   helmet: helmetConfig = {},
 }) => {
@@ -122,8 +123,7 @@ module.exports = ({
   app.get(
     "/api/sticker",
     apiHandler(async (req, res) => {
-      const url = await sf.getRandomWebringForSticker(req.query.id);
-      res.redirect(url);
+      res.redirect(`${stickerWebringUrl}/${req.query.name}`);
     })
   );
 

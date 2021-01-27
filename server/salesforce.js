@@ -4,8 +4,6 @@ const normalizeUrl = require("./normalizeUrl");
 const jsforce = require("jsforce");
 
 // Utils
-const random = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
 const last = (arr) => arr[arr.length - 1];
 
 const wrapArr = (arr, index, dir) => {
@@ -153,27 +151,6 @@ const _getWebringWebsites = (sf, webringId) => {
     });
 };
 
-const getRandomWebringForSticker = async (sf, stickerId) => {
-  // TODO: update this query to fetch from a global instance (maybe?)
-  // https://github.com/crcastle/weirdos-salesforce-app/issues/29
-  const webringId = await sf
-    .query(
-      `SELECT Id
-            FROM Webring__c
-            WHERE Sticker__c = '${stickerId}'`
-    )
-    .then(({ records }) => records[0])
-    .then((webring) => webring && webring.Id);
-
-  if (!webringId) {
-    throw new SetupError("No webring could be found for the sticker", sf);
-  }
-
-  const websites = await _getWebringWebsites(sf, webringId);
-
-  return random(websites);
-};
-
 const getWebring = async (sf, currentWebsite) => {
   const webring = await sf
     .query(
@@ -216,7 +193,6 @@ const methods = {
   getStickers,
   getImage,
   getWebring,
-  getRandomWebringForSticker,
 };
 
 module.exports.init = ({ loginUrl, authUrl }, db) => {
