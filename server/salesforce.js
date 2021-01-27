@@ -187,12 +187,31 @@ const getWebring = async (sf, currentWebsite) => {
   };
 };
 
+const createHostField = async (sf) => {
+  await sf.metadata.create("CustomField", [
+    {
+      fullName: "User.HerokuAppName__c",
+      label: "Heroku App Name",
+      type: "Text",
+      length: 80,
+    },
+  ]);
+};
+
+const updateHost = async (sf, { userId, host }) => {
+  await sf.sobject("User").update({
+    Id: userId,
+    HerokuAppName__c: host,
+  });
+};
+
 // All query methods that will be exposed to the server
 const methods = {
   getContact,
   getStickers,
   getImage,
   getWebring,
+  updateHost,
 };
 
 module.exports.init = ({ loginUrl, authUrl }, db) => {
@@ -243,7 +262,12 @@ module.exports.init = ({ loginUrl, authUrl }, db) => {
     };
   };
 
-  const login = async () => connect(await db.getAuth());
+  const login = async () => {
+    connect(await db.getAuth());
+    if (sf) {
+      await createHostField(sf);
+    }
+  };
 
   const wrapApiMethod = (rawMethod) => async (...args) => {
     // try to login first

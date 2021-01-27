@@ -42,10 +42,17 @@ module.exports.getAuth = async ({ db }) => {
 
 module.exports.saveAuth = async (
   { db, helpers },
-  { accessToken, refreshToken, instanceUrl }
+  { accessToken, refreshToken, instanceUrl, host, userId }
 ) => {
   const authCs = new helpers.ColumnSet(
-    ["id", "access_token", "instance_url", "refresh_token"],
+    [
+      "id",
+      "access_token",
+      "instance_url",
+      "refresh_token",
+      "host",
+      "sf_user_id",
+    ],
     { table: "auth" }
   );
 
@@ -54,6 +61,8 @@ module.exports.saveAuth = async (
     access_token: accessToken,
     refresh_token: refreshToken,
     instance_url: instanceUrl,
+    host,
+    sf_user_id: userId,
   };
 
   const query = `${helpers.insert(data, authCs)}

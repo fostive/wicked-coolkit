@@ -150,10 +150,13 @@ module.exports = ({
       access_token: accessToken,
       refresh_token: refreshToken,
       instance_url: instanceUrl,
+      redirect_uri: redirectUri,
+      user_id: userId,
     } = req.query;
 
     if (!accessToken || !refreshToken || !instanceUrl) {
-      throw new Error("Error during Salesforce auth");
+      res.redirect("/getting-started?auth_error=true");
+      return;
     }
 
     sf.connect({
@@ -161,13 +164,22 @@ module.exports = ({
       accessToken,
     });
 
-    await db.saveAuth({
-      instanceUrl,
-      accessToken,
-      refreshToken,
-    });
+    await sf.createHostField();
 
-    res.redirect("/getting-started");
+    const host = new URL("/", redirectUri).host;
+
+    await Promise.all([
+      db.saveAuth({
+        instanceUrl,
+        accessToken,
+        refreshToken,
+        host,
+        userId,
+      }),
+      sf.updateHost({ userId, host }),
+    ]);
+
+    res.redirect("/getting-started?auth_success=true");
   });
 
   const pages = {
