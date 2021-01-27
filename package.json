@@ -43,11 +43,7 @@
   },
   "files": [
     "/server",
-    "/dist/hitCounter.js",
-    "/dist/tradingCard.js",
-    "/dist/webring.js",
-    "/dist/util-*.js",
-    "/dist/stickers/**/*.{svg,png,zip,csv}"
+    "/dist"
   ],
   "homepage": "https://github.com/andyet/wicked-coolkit",
   "husky": {

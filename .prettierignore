@@ -1,8 +1,3 @@
-# Jest coverage
 coverage/
-
-# Built site files
 public/
-
-# Default dist folder
 dist/

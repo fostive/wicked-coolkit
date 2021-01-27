@@ -9,12 +9,7 @@
   },
   "overrides": [
     {
-      "files": [
-        "server/**",
-        "server.js",
-        "jest.config.js",
-        "lwc-services.config.js"
-      ],
+      "files": ["server/**", "server.js", "lwc-services.config.js"],
       "env": {
         "node": true
       }

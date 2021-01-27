@@ -4,17 +4,6 @@ logs
 *-debug.log
 *-error.log
 
-.env
-
-# Standard lib folder
-/lib
-
-# Standard dist folder
-/dist
-
-# Built site files
-/public
-
 # Tooling files
 node_modules
 
@@ -33,3 +22,10 @@ ehthumbs.db
 [Dd]esktop.ini
 $RECYCLE.BIN/
 config/local.json
+
+# Built files
+/public
+/dist
+
+# Secrets
+.env
