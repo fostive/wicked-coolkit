@@ -1,7 +1,7 @@
 {
-    "modules": [
-        {
-            "dir": "client/modules"
-        }
-    ]
+  "modules": [
+    {
+      "dir": "client/modules"
+    }
+  ]
 }

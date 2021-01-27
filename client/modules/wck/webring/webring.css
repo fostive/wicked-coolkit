@@ -2,83 +2,83 @@
 ------------------------*/
 
 .container {
-    box-sizing: border-box;
-    width: 100%;
-    padding: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
 }
 
 /* Webring navigation
 ------------------------*/
 
 .webring {
-    box-sizing: border-box;
-    width: calc(100% - 20px);
-    background-image: linear-gradient(45deg, #79589f, #009edb);
-    font-size: 100%;
-    font-family: 'Courier New', Courier, serif;
-    font-weight: bold;
-    color: #f6f0e2;
-    border: 2px solid;
+  box-sizing: border-box;
+  width: calc(100% - 20px);
+  background-image: linear-gradient(45deg, #79589f, #009edb);
+  font-size: 100%;
+  font-family: "Courier New", Courier, serif;
+  font-weight: bold;
+  color: #f6f0e2;
+  border: 2px solid;
 }
 
 .webring.light-mode {
-    box-shadow: 0.3em 0.3em 0 #1e1e60;
-    border-color: #1e1e60;
+  box-shadow: 0.3em 0.3em 0 #1e1e60;
+  border-color: #1e1e60;
 }
 
 .webring.dark-mode {
-    box-shadow: 0.3em 0.3em 0 #f6f0e2;
-    border-color: #f6f0e2;
+  box-shadow: 0.3em 0.3em 0 #f6f0e2;
+  border-color: #f6f0e2;
 }
 
 .webring a {
-    color: #f6f0e2;
-    text-decoration: none;
+  color: #f6f0e2;
+  text-decoration: none;
 }
 
 .webring a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .webring .error-message a {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .webring .description-container,
 .webring nav {
-    padding: 8px 12px;
+  padding: 8px 12px;
 }
 
 .webring .description-container {
-    margin: 0;
-    background-color: rgba(0, 0, 0, 0.3);
-    line-height: 1.3;
+  margin: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  line-height: 1.3;
 }
 
 .webring .description {
-    font-weight: normal;
+  font-weight: normal;
 }
 
 .webring .description .description-text:before {
-    content: ' / ';
+  content: " / ";
 }
 
 .webring nav {
-    box-sizing: border-box;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    line-height: 1;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  line-height: 1;
 }
 
 .webring nav a {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .webring nav a.previous svg {
-    margin-right: 0.5em;
+  margin-right: 0.5em;
 }
 .webring nav a.next svg {
-    margin-left: 0.5em;
+  margin-left: 0.5em;
 }

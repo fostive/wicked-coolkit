@@ -2,52 +2,52 @@
 ------------------------*/
 
 .container {
-    box-sizing: border-box;
-    width: 100%;
-    display: flex;
-    padding: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  padding: 10px;
 }
 
 /* Hit Counter
 ------------------------*/
 
 .hit-counter {
-    box-sizing: border-box;
-    display: flex;
-    background-image: linear-gradient(45deg, #79589f, #009edb);
-    border: 2px solid;
-    line-height: 1;
-    font-size: 112.5%;
-    font-family: 'Courier New', Courier, serif;
-    font-weight: bold;
-    color: #f6f0e2;
+  box-sizing: border-box;
+  display: flex;
+  background-image: linear-gradient(45deg, #79589f, #009edb);
+  border: 2px solid;
+  line-height: 1;
+  font-size: 112.5%;
+  font-family: "Courier New", Courier, serif;
+  font-weight: bold;
+  color: #f6f0e2;
 }
 
 .hit-counter.light-mode {
-    box-shadow: 0.2em 0.2em 0 #1e1e60;
+  box-shadow: 0.2em 0.2em 0 #1e1e60;
 }
 
 .hit-counter.dark-mode {
-    box-shadow: 0.2em 0.2em 0 #f6f0e2;
+  box-shadow: 0.2em 0.2em 0 #f6f0e2;
 }
 
 .hit-counter span {
-    padding: 0.3em 0.4em 0.2em;
-    text-align: center;
-    display: block;
-    flex: 1;
+  padding: 0.3em 0.4em 0.2em;
+  text-align: center;
+  display: block;
+  flex: 1;
 }
 
 .hit-counter span:not(:first-child) {
-    border-left: 2px solid;
+  border-left: 2px solid;
 }
 
 .hit-counter.light-mode,
 .hit-counter.light-mode span {
-    border-color: #1e1e60;
+  border-color: #1e1e60;
 }
 
 .hit-counter.dark-mode,
 .hit-counter.dark-mode span {
-    border-color: #f6f0e2;
+  border-color: #f6f0e2;
 }

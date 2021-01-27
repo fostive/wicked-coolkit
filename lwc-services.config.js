@@ -1,9 +1,9 @@
 // Find the full example of all available configuration options at
 // https://github.com/muenzpraeger/create-lwc-app/blob/main/packages/lwc-services/example/lwc-services.config.js
 module.exports = {
-    buildDir: './public',
-    sourceDir: './client',
-    devServer: {
-        proxy: { '/': 'http://localhost:3002' }
-    }
+  buildDir: "./public",
+  sourceDir: "./client",
+  devServer: {
+    proxy: { "/": "http://localhost:3002" },
+  },
 };

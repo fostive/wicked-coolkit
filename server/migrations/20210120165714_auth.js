@@ -1,5 +1,5 @@
 exports.up = async (db) => {
-    await db.query(`
+  await db.query(`
         CREATE TABLE auth (
             id character varying(250) PRIMARY KEY NOT NULL UNIQUE,
             access_token character varying(250) NOT NULL,
@@ -10,5 +10,5 @@ exports.up = async (db) => {
 };
 
 exports.down = async (db) => {
-    await db.query('DROP TABLE IF EXISTS auth');
+  await db.query("DROP TABLE IF EXISTS auth");
 };

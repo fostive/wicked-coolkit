@@ -1,54 +1,54 @@
 <template>
-    <div class="container">
-        <div class="webring light-mode">
-            <div class="description-container">
-                <div class="error-message" lwc:dom="manual"></div>
-                <div if:true={loading} class="loading">Loading...</div>
-                <div class="description">
-                    <span if:true={name} class="home">{name}</span>
-                    <span if:true={description} class="description-text"
-                        >{description}</span
-                    >
-                </div>
-            </div>
-            <nav if:true={success}>
-                <a href={prevHref} class="previous" onclick={onLinkClick}>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="12"
-                        height="20"
-                        viewBox="0 0 12 20"
-                    >
-                        <polyline
-                            points="9.96 2.15 2.04 10.06 9.96 17.86"
-                            fill="none"
-                            stroke="#f6f0e2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                        ></polyline>
-                    </svg>
-                    Previous
-                </a>
-                <a href={nextHref} class="next" onclick={onLinkClick}>
-                    Next
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="12"
-                        height="20"
-                        viewBox="0 0 12 20"
-                    >
-                        <polyline
-                            points="2.04 17.86 9.96 9.94 2.04 2.15"
-                            fill="none"
-                            stroke="#f6f0e2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                        ></polyline>
-                    </svg>
-                </a>
-            </nav>
+  <div class="container">
+    <div class="webring light-mode">
+      <div class="description-container">
+        <div class="error-message" lwc:dom="manual"></div>
+        <div if:true={loading} class="loading">Loading...</div>
+        <div class="description">
+          <span if:true={name} class="home">{name}</span>
+          <span if:true={description} class="description-text"
+            >{description}</span
+          >
         </div>
+      </div>
+      <nav if:true={success}>
+        <a href={prevHref} class="previous" onclick={onLinkClick}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="12"
+            height="20"
+            viewBox="0 0 12 20"
+          >
+            <polyline
+              points="9.96 2.15 2.04 10.06 9.96 17.86"
+              fill="none"
+              stroke="#f6f0e2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            ></polyline>
+          </svg>
+          Previous
+        </a>
+        <a href={nextHref} class="next" onclick={onLinkClick}>
+          Next
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="12"
+            height="20"
+            viewBox="0 0 12 20"
+          >
+            <polyline
+              points="2.04 17.86 9.96 9.94 2.04 2.15"
+              fill="none"
+              stroke="#f6f0e2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            ></polyline>
+          </svg>
+        </a>
+      </nav>
     </div>
+  </div>
 </template>

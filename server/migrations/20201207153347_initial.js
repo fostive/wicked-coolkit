@@ -1,5 +1,5 @@
 exports.up = async (db) => {
-    await db.query(`
+  await db.query(`
         CREATE TABLE hit_counter (
             id SERIAL PRIMARY KEY,
             site character varying(250) NOT NULL UNIQUE,
@@ -9,5 +9,5 @@ exports.up = async (db) => {
 };
 
 exports.down = async (db) => {
-    await db.query('DROP TABLE IF EXISTS hit_counter');
+  await db.query("DROP TABLE IF EXISTS hit_counter");
 };
