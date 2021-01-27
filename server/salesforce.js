@@ -196,6 +196,17 @@ const createHostField = async (sf) => {
       length: 80,
     },
   ]);
+
+  await sf.metadata.update("Profile", [
+    {
+      fullName: "Admin",
+      fieldPermissions: {
+        field: "User.HerokuAppName__c",
+        readable: true,
+        editable: true,
+      },
+    },
+  ]);
 };
 
 const updateHost = async (sf, { userId, host }) => {
@@ -217,12 +228,15 @@ const methods = {
 module.exports.init = ({ loginUrl, authUrl }, db) => {
   let sf = null;
 
-  const connect = (c) => {
+  const connect = async (c, isInitial = true) => {
     if (c && c.instanceUrl && c.accessToken) {
       sf = new jsforce.Connection({
         instanceUrl: c.instanceUrl,
         accessToken: c.accessToken,
       });
+      if (isInitial) {
+        await createHostField(sf);
+      }
     }
   };
 
@@ -254,7 +268,7 @@ module.exports.init = ({ loginUrl, authUrl }, db) => {
     }));
 
     await db.refreshAuth(refreshAuth);
-    connect(refreshAuth);
+    await connect(refreshAuth, false);
 
     return {
       ...auth,
