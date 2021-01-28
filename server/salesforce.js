@@ -228,19 +228,19 @@ const methods = {
 module.exports.init = ({ loginUrl, authUrl }, db) => {
   let sf = null;
 
-  const connect = async (c, isInitial = true) => {
+  const connect = async (c, { addInitialFields = true } = {}) => {
     if (c && c.instanceUrl && c.accessToken) {
       sf = new jsforce.Connection({
         instanceUrl: c.instanceUrl,
         accessToken: c.accessToken,
       });
-      if (isInitial) {
+      if (addInitialFields) {
         await createHostField(sf);
       }
     }
   };
 
-  const refresh = async () => {
+  const refresh = async ({ addInitialFields } = {}) => {
     const auth = await db.getAuth();
 
     if (!auth || !auth.refreshToken) {
@@ -268,7 +268,7 @@ module.exports.init = ({ loginUrl, authUrl }, db) => {
     }));
 
     await db.refreshAuth(refreshAuth);
-    await connect(refreshAuth, false);
+    await connect(refreshAuth, { addInitialFields });
 
     return {
       ...auth,
@@ -276,10 +276,18 @@ module.exports.init = ({ loginUrl, authUrl }, db) => {
     };
   };
 
-  const login = async () => {
-    connect(await db.getAuth());
-    if (sf) {
-      await createHostField(sf);
+  const login = async ({ retry } = { retry: true }) => {
+    try {
+      await connect(await db.getAuth());
+    } catch (e) {
+      // createHostField can throw an error if we have an old token
+      // so during login if we get this error, we try to refresh and
+      // login again
+      if (retry && e.errorCode === "sf:INVALID_SESSION_ID") {
+        await refresh({ addInitialFields: true });
+      } else {
+        throw e;
+      }
     }
   };
 

@@ -7,7 +7,7 @@ import Webring from "wck/webring";
 const main = document.querySelector("#main");
 
 [TradingCard, Webring, HitCounter].forEach((is) => {
-  const tagName = ("wck" + is.name).replace(
+  const tagName = ("wck-" + is.name).replace(
     /[A-Z]/g,
     (l) => "-" + l.toLowerCase()
   );

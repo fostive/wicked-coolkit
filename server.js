@@ -23,4 +23,6 @@ start()
       }${port}`
     )
   )
-  .catch(console.error);
+  .catch((e) => {
+    console.error("Server could not be started:", e);
+  });
