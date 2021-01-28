@@ -78,3 +78,7 @@ module.exports.refreshAuth = async ({ db }, { accessToken, instanceUrl }) => {
     [accessToken, instanceUrl, USER_ID]
   );
 };
+
+module.exports.dropAuth = async ({ db }) => {
+  await db.query(`DELETE FROM auth`);
+};

@@ -205,7 +205,9 @@ module.exports = ({
 
   const start = async () => {
     await migrate(pgConfig);
-    await sf.login();
+    // If there is a problem with logging in, then logout which will clear auth and allow
+    // the user to start over
+    await sf.login().catch(() => sf.logout());
     await new Promise((resolve) => app.listen(port, resolve));
     return { port };
   };
