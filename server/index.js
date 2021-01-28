@@ -21,6 +21,7 @@ module.exports = ({
   stickerWebringUrl = "https://wicked-coolkit-webring.herokuapp.com/sticker",
   port = process.env.PORT || 3002,
   helmet: helmetConfig = {},
+  __overrideHost,
 }) => {
   const pgConfig =
     typeof _pgConfig === "string" ? { connectionString: _pgConfig } : _pgConfig;
@@ -174,7 +175,11 @@ module.exports = ({
         host,
         userId,
       }),
-      sf.updateHost({ userId, host }),
+      // This host is a special last-day hack
+      // to allow for our card at wickedcoolkitapi.herokuapp.com to
+      // redirect somewhere else when it gets loaded as part
+      // of a sticker webring
+      sf.updateHost({ userId, host: __overrideHost || host }),
     ]);
 
     res.redirect("/getting-started?auth_success=true");
