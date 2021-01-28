@@ -23,10 +23,11 @@ const findWebringUrlIndex = (webring, url) => {
 
 // Custom errors that should be responded to differently on the client
 class AuthError extends Error {
-  constructor() {
+  constructor(message) {
     super(
       'The component could not make a connection to Salesforce. Please <a href="{{host}}/sf/auth?redirect_host={{host}}" target="_blank">authenticate</a> to continue setup.'
     );
+    this.internalMessage = message;
     this.jsfErrorCode = "SF_AUTH";
     this.statusCode = 401;
   }
@@ -291,6 +292,11 @@ module.exports.init = ({ loginUrl, authUrl }, db) => {
     }
   };
 
+  const logout = async () => {
+    await db.dropAuth();
+    sf = null;
+  };
+
   const wrapApiMethod = (rawMethod) => async (...args) => {
     // try to login first
     if (sf === null) {
@@ -344,6 +350,7 @@ module.exports.init = ({ loginUrl, authUrl }, db) => {
     }, {}),
     login,
     connect,
+    logout,
     get connection() {
       return sf;
     },
