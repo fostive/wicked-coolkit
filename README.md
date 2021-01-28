@@ -6,7 +6,7 @@ This repo contains the `wicked-coolkit` package, which is both the Lightning Web
 
 ## Developing
 
-##\$ Local Dev
+## Local Dev
 
 Start simple by running `npm run watch`. This will start the project with a local development server.
 
