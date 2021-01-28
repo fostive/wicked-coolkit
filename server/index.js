@@ -131,7 +131,10 @@ module.exports = ({
   app.get(
     "/api/webring",
     apiHandler(async (req, res) => {
-      const webring = await sf.getWebring(req.query.site);
+      const webring = await sf.getWebring(
+        req.query.site,
+        __overrideHost && "a034x000002gA5YAAU"
+      );
       res.json(webring);
     })
   );

@@ -152,12 +152,15 @@ const _getWebringWebsites = (sf, webringId) => {
     });
 };
 
-const getWebring = async (sf, currentWebsite) => {
+const getWebring = async (sf, currentWebsite, __overrideId) => {
   const webring = await sf
+    // For our API instance we fetch by a specific id,
+    // for other users, just fetch the first one since there
+    // should only be one
     .query(
-      `SELECT Id, Name, Description__c
-            FROM Webring__c
-            LIMIT 1`
+      `SELECT Id, Name
+      FROM Website__c
+      ${__overrideId ? `WHERE Webring__c = '${__overrideId}'` : "LIMIT 1"}`
     )
     .then(({ records }) => records[0])
     .then(
