@@ -6,8 +6,8 @@ import Webring from "wck/webring";
 // eslint-disable-next-line @lwc/lwc/no-document-query
 const main = document.querySelector("#main");
 
-[TradingCard, Webring, HitCounter].forEach((is) => {
-  const tagName = ("wck-" + is.name).replace(
+Object.entries({ TradingCard, Webring, HitCounter }).forEach(([name, is]) => {
+  const tagName = ("wck" + name).replace(
     /[A-Z]/g,
     (l) => "-" + l.toLowerCase()
   );
