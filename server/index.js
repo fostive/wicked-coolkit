@@ -22,6 +22,7 @@ module.exports = ({
   port = process.env.PORT || 3002,
   helmet: helmetConfig = {},
   __overrideHost,
+  __overrideWebringId,
 }) => {
   const pgConfig =
     typeof _pgConfig === "string" ? { connectionString: _pgConfig } : _pgConfig;
@@ -131,7 +132,7 @@ module.exports = ({
   app.get(
     "/api/webring",
     apiHandler(async (req, res) => {
-      const webring = await sf.getWebring(req.query.site);
+      const webring = await sf.getWebring(req.query.site, __overrideWebringId);
       res.json(webring);
     })
   );

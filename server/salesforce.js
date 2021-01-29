@@ -135,13 +135,9 @@ const getImage = async (sf, imageId) => {
 const _getWebringWebsites = (sf, webringId) => {
   return sf
     .query(
-      `SELECT URL__c, Name
-            FROM Website__c
-            WHERE Id IN
-            (SELECT Website__c
-            FROM Website_Webring_Association__c
-            WHERE Webring__c = '${webringId}')
-            ORDER BY CreatedDate`
+      `SELECT URL__c
+      FROM Website__c
+      WHERE Webring__c = '${webringId}'`
     )
     .then(({ records }) => records)
     .then((websites) => {
@@ -152,12 +148,15 @@ const _getWebringWebsites = (sf, webringId) => {
     });
 };
 
-const getWebring = async (sf, currentWebsite) => {
+const getWebring = async (sf, currentWebsite, __overrideId) => {
   const webring = await sf
+    // For our API instance we fetch by a specific id,
+    // for other users, just fetch the first one since there
+    // should only be one
     .query(
       `SELECT Id, Name, Description__c
-            FROM Webring__c
-            LIMIT 1`
+      FROM Webring__c
+      ${__overrideId ? `WHERE Id = '${__overrideId}'` : "LIMIT 1"}`
     )
     .then(({ records }) => records[0])
     .then(

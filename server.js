@@ -7,6 +7,7 @@ const { start, app } = server({
   authUrl: process.env.SALESFORCE_AUTH_URL,
   pg: process.env.DATABASE_URL,
   __overrideHost: "wickedcoolkit.com",
+  __overrideWebringId: "a034x000002gA5YAAU",
 });
 
 app.use(express.static("./public"));
