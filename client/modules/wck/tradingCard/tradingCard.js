@@ -74,6 +74,7 @@ export default class TradingCard extends LightningElement {
         this.github,
         this.linkedin,
         this.instagram,
+        this.website,
       ].filter(Boolean).length > 0
     );
   }
@@ -109,7 +110,6 @@ export default class TradingCard extends LightningElement {
     this.strengths = data.strengths;
 
     this.website = data.website;
-
     this._email = data.email;
     this._twitter = data.twitter;
     this._codepen = data.codepen;
