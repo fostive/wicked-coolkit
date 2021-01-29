@@ -6,7 +6,7 @@ This repo contains the `wicked-coolkit` package, which is both the Lightning Web
 
 ## Developing
 
-## Local Dev
+### Local Dev
 
 Start simple by running `npm run watch`. This will start the project with a local development server.
 
@@ -23,7 +23,7 @@ DATABASE_URL=postgres://localhost:5432/heroku-wicked-coolkit
 SALESFORCE_URL=https://test.salesforce.com
 ```
 
-## Publishing
+### Publishing
 
 You can use the [`np` package](https://www.npmjs.com/package/np) to make publishing easier. Install the package and then you can run:
 
