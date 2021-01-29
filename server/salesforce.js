@@ -137,7 +137,8 @@ const _getWebringWebsites = (sf, webringId) => {
     .query(
       `SELECT URL__c
       FROM Website__c
-      WHERE Webring__c = '${webringId}'`
+      WHERE Webring__c = '${webringId}'
+      ORDER BY CreatedDate`
     )
     .then(({ records }) => records)
     .then((websites) => {
