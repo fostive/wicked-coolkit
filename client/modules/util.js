@@ -15,13 +15,18 @@ export const sticker = (s) =>
 const fetchApi = (instance, path, options) =>
   fetch(api(instance.host) + path, options);
 
-export const fetchData = async (...args) => {
-  const res = await fetchApi(...args);
+const defaultErrorMessage = (instance) => {
+  const host = getHost(instance.host);
+  return `An error occurred. If this is you card, did you complete the <a href="${host}/getting-started">setup process</a>?`;
+};
+
+export const fetchData = async (instance, path, options) => {
+  const res = await fetchApi(instance, path, options);
   try {
     const data = await res.json();
     return res.ok ? [data, null] : [null, data];
   } catch (e) {
-    return [null, { message: res.statusText || "An error occurred" }];
+    return [null, { message: res.statusText || defaultErrorMessage(instance) }];
   }
 };
 
@@ -35,13 +40,13 @@ export const fetchInitial = async (instance, path, options) => {
     const [resData, resError] = await fetchData(instance, path, options);
     if (resError) {
       // An error with a code means we should show the message
-      error = resError.code ? resError.message : "An error occurred";
+      error = resError.code ? resError.message : defaultErrorMessage(instance);
       error = error.replace(/\{\{host\}\}/g, getHost(instance.host));
     } else {
       data = resData;
     }
   } catch (e) {
-    error = "An error occurred";
+    error = defaultErrorMessage(instance);
   }
 
   instance.loading = false;
