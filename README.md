@@ -39,6 +39,15 @@ Once published [wickedcoolkit.com](https://github.com/fostive/wickedcoolkit.com)
 
 If you are updating this package in your repo, you can check out the [releases](https://github.com/fostive/wicked-coolkit/releases) to see what's changed. This repo adheres to semver so it should be safe to update except between major versions.
 
+If you deployed to Heroku you can run the following to checkout the latest code and deploy it. The only prerequisite is that you [install the Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli).
+
+```sh
+git clone git@github.com:fostive/wicked-coolkit-user.git
+cd wicked-coolkit-user
+heroku git:remote --app=YOUR_HEROKU_APP_NAME
+git push heroku main
+```
+
 If you are updating your repo that you deployed via [wicked-coolkit-user][wicked-coolkit-user] to a new major version, you'll want to make sure that the installed version of `wicked-coolkit` matches that version in the script tags on your page.
 
 So if in your repo you run `npm install` to get the latest version and you get `2.0.4`, you'll need to go to your site and make sure your script tags reference that version in the src `unpkg.com/wicked-coolkit@^2.0.4`.
