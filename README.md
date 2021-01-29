@@ -8,15 +8,15 @@ This repo contains the `wicked-coolkit` package, which is both the Lightning Web
 
 ### Local Dev
 
-Start simple by running `npm run watch`. This will start the project with a local development server.
+Start by running `npm run watch`. This will start a watcher to compile the Lightning Web Components and a watcher for the API server.
 
 Run `npm run build && npm run serve` to serve a production version of the built files.
 
-Run `npm run dist` to package all the code and assets for publishing to npm.
+Run `npm run dist` to package all the code and assets for publishing to npm. This is also run automatically when running `npm publish`.
 
 All web components are within the [`client/modules`](./client/modules) folder. The Express server and related database and Salesforce routes can be found in the [`server`](./server) folder.
 
-When running locally (and testing against a local database and Salesforce scratch org), you can create a `.env` file with the following variables:
+When running locally (and testing against a local database or Salesforce scratch org), you can create a `.env` file with the following variables:
 
 ```sh
 DATABASE_URL=postgres://localhost:5432/heroku-wicked-coolkit
@@ -33,7 +33,7 @@ np [patch | minor | major] --no-cleanup --no-tests
 
 This will publish and open a GitHub release draft.
 
-Once published [wickedcoolkit.com](https://github.com/fostive/wickedcoolkit.com) and [wicked-coolkit-user][wicked-coolkit-user] should be deployed with the new version so that any new changes are deployed automatically instead of waiting for CDN changes to propagate via `unpkg`.
+Once published [wickedcoolkit.com](https://github.com/fostive/wickedcoolkit.com) and [wicked-coolkit-user][wicked-coolkit-user] should be run with `npm install wicked-coolkit@latest` and deployed with the new version. This will force any new changes to be updated automatically instead of waiting for CDN changes to propagate via `unpkg`.
 
 ### Updating
 
@@ -48,16 +48,15 @@ heroku git:remote --app=YOUR_HEROKU_APP_NAME
 git push heroku main
 ```
 
+### Breaking Changes
+
 If you are updating your repo that you deployed via [wicked-coolkit-user][wicked-coolkit-user] to a new major version, you'll want to make sure that the installed version of `wicked-coolkit` matches that version in the script tags on your page.
 
-So if in your repo you run `npm install` to get the latest version and you get `2.0.4`, you'll need to go to your site and make sure your script tags reference that version in the src `unpkg.com/wicked-coolkit@^2.0.4`.
+So if in your repo has `2.0.4` installed, you'll want to update any Hit Counter and Webring `<script>` tags on your sites so that the `src` contains `wicked-coolkit@^2.0.4`.
 
-```
-> npm install wicked-coolkit@latest
+The easiest way to find out what version you have installed is to go to `/getting-started` on your server and it will show you the correct code to copy and paste into your site.
 
-+ wicked-coolkit@2.0.4
-updated 1 package and audited 584 packages in 4.525s
-```
+Here's an example script tag for the Webring that is pulling in version 2.0.4.
 
 ```html
 <script
@@ -66,7 +65,5 @@ updated 1 package and audited 584 packages in 4.525s
   src="https://unpkg.com/wicked-coolkit@^2.0.4/dist/webring.js"
 ></script>
 ```
-
-If you don't know what version you have installed, you can go to `/getting-started` on your server and it will show you the correct code to copy and paste into your site.
 
 [wicked-coolkit-user]: https://github.com/fostive/wickedcoolkit.com
