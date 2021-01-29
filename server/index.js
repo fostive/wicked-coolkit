@@ -109,9 +109,20 @@ module.exports = ({
     apiHandler(async (req, res) => {
       const contact = await sf.getContact();
 
+      // These catch blocks will just log and suppress these
+      // errors so the card can still be loaded without stickers
+      // or images. Removing them will cause the SetupError message
+      // to be shown
       const [img, stickers] = await Promise.all([
-        sf.getImage(contact.pictureId),
-        sf.getStickers(contact.id),
+        contact.pictureId &&
+          sf.getImage(contact.pictureId).catch((e) => {
+            console.log("Error fetching image", e);
+            return undefined;
+          }),
+        sf.getStickers(contact.id).catch((e) => {
+          console.log("Error fetching stickers", e);
+          return [];
+        }),
       ]);
 
       return res.json({
