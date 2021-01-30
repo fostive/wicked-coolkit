@@ -9,6 +9,7 @@ export default class Webring extends LightningElement {
   nextHref = null;
 
   @api host = null;
+  @api target = null;
 
   get success() {
     return !this.loading && !this.error;
