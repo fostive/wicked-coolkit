@@ -1,7 +1,7 @@
 {
   "name": "wicked-coolkit",
   "description": "The Heroku Wicked Coolkit",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "author": "Heroku",
   "bugs": "https://github.com/fostive/wicked-coolkit/issues",
   "dependencies": {
