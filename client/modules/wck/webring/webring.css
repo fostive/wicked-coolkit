@@ -4,7 +4,6 @@
 .container {
   box-sizing: border-box;
   width: 100%;
-  padding: 10px;
 }
 
 /* Webring navigation
@@ -12,7 +11,7 @@
 
 .webring {
   box-sizing: border-box;
-  width: calc(100% - 20px);
+  width: calc(100% - 0.3em);
   background-image: linear-gradient(45deg, #79589f, #009edb);
   font-size: 100%;
   font-family: "Courier New", Courier, serif;
