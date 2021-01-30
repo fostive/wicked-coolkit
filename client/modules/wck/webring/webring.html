@@ -12,7 +12,12 @@
         </div>
       </div>
       <nav if:true={success}>
-        <a href={prevHref} class="previous" onclick={onLinkClick}>
+        <a
+          href={prevHref}
+          class="previous"
+          onclick={onLinkClick}
+          target={target}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="12"
@@ -30,7 +35,7 @@
           </svg>
           Previous
         </a>
-        <a href={nextHref} class="next" onclick={onLinkClick}>
+        <a href={nextHref} class="next" onclick={onLinkClick} target={target}>
           Next
           <svg
             xmlns="http://www.w3.org/2000/svg"
