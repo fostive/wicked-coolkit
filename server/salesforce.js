@@ -100,36 +100,43 @@ const getStickers = (sf, id) => {
 
 const getImage = async (sf, imageId) => {
   const path = `/services/data/v50.0/sobjects/ContentVersion/${imageId}`;
-  const [imageMeta, base64Image] = await Promise.all([
-    sf.request(path),
-    fetch(`${sf.instanceUrl}${path}/VersionData`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${sf.accessToken}`,
-      },
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.body;
-        }
-        throw new Error(
-          `Error fetching image data: ${res.status} ${res.statusText}`
-        );
-      })
-      .then(
-        (body) =>
-          new Promise((resolve, reject) => {
-            let data = "";
-            body
-              .pipe(new Base64Encode())
-              .on("data", (d) => (data += d))
-              .on("end", () => resolve(data))
-              .on("error", reject);
-          })
-      ),
-  ]);
 
-  return `data:image/${imageMeta.FileType.toLowerCase()};base64,${base64Image}`;
+  try {
+    const [imageMeta, base64Image] = await Promise.all([
+      sf.request(path),
+      fetch(`${sf.instanceUrl}${path}/VersionData`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${sf.accessToken}`,
+        },
+      })
+        .then((res) => {
+          if (res.ok) {
+            return res.body;
+          }
+          throw new Error(
+            `Error fetching image data: ${res.status} ${res.statusText}`
+          );
+        })
+        .then(
+          (body) =>
+            new Promise((resolve, reject) => {
+              let data = "";
+              body
+                .pipe(new Base64Encode())
+                .on("data", (d) => (data += d))
+                .on("end", () => resolve(data))
+                .on("error", reject);
+            })
+        ),
+    ]);
+    return `data:image/${imageMeta.FileType.toLowerCase()};base64,${base64Image}`;
+  } catch (e) {
+    throw new SetupError(
+      `There was an error getting the image: ${e.message}`,
+      sf
+    );
+  }
 };
 
 const _getWebringWebsites = (sf, webringId) => {
