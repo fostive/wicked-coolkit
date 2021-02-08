@@ -56,7 +56,7 @@ const getContact = async (sf) => {
     )
     .then(({ records }) => records[0]);
 
-  if (!c.Id) {
+  if (!c || !c.Id) {
     throw new SetupError("No cards could be found", sf);
   }
 
@@ -66,7 +66,8 @@ const getContact = async (sf) => {
     email: c.Email__c,
     bio: c.Bio__c,
     pictureId: c.Picture_Content_Version_ID__c,
-    strengths: c.Feats_of_Strength__c.split(",")
+    strengths: (c.Feats_of_Strength__c || "")
+      .split(",")
       .map((t) => t.trim())
       .filter(Boolean),
     website: c.Main_Website__c,
