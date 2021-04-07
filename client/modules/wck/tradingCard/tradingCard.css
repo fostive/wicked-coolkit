@@ -385,3 +385,87 @@ img {
 .sticker:hover {
   transform: scale(1.1);
 }
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /*background: rgba(30,30,96,.5);*/
+  background-image: linear-gradient(
+    230deg,
+    rgba(121, 88, 159, 0.95),
+    rgba(0, 158, 219, 0.95)
+  );
+  padding: 40px;
+  display: flex;
+  z-index: 10;
+  justify-content: center;
+  align-items: center;
+}
+
+.overlay-content {
+  width: 100%;
+  max-width: 400px;
+  padding: 3em 1em;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-color: #f6f0e2;
+  border: 2px solid #1e1e60;
+  box-shadow: 0.4em 0.4em 0 #1e1e60;
+  font-family: "Courier New", serif;
+  font-size: 120%;
+  font-weight: bold;
+  color: #1e1e60;
+}
+
+.overlay-content > .loading {
+  width: 40px;
+  height: 50px;
+  display: block;
+  background-repeat: no-repeat;
+  background-image: linear-gradient(60deg, #f6f0e2 60%, #1e1e60 60.5%),
+    linear-gradient(60deg, #1e1e60 40%, #f6f0e2 40.5%);
+  background-size: 50% 50%;
+  background-position: 15% 100%, 95% 0;
+  animation: loading infinite linear 3000ms;
+}
+
+@keyframes loading {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.overlay-content > p {
+  margin-top: 20px;
+}
+
+.overlay-close {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  font-family: "Courier New", serif;
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 8px 15px;
+  border: 2px solid #009edb;
+  text-decoration: none;
+  font-weight: bold;
+  color: #009edb;
+  box-shadow: 4px 4px 0 #009edb;
+  transition: all 300ms ease-in-out;
+  cursor: pointer;
+}
+
+.overlay-close:hover {
+  background-color: white;
+  border-color: #1e1e60;
+  color: #1e1e60;
+  box-shadow: 6px 6px 0 #1e1e60;
+}

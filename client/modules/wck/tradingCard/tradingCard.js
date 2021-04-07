@@ -8,6 +8,7 @@ export default class TradingCard extends LightningElement {
   website = null;
   strengths = null;
   loading = true;
+  loadingSticker = false;
 
   @api host = null;
 
@@ -21,6 +22,19 @@ export default class TradingCard extends LightningElement {
       imgSrc: util.sticker(sticker.path),
       imgAlt: sticker.alt,
     }));
+  }
+
+  onStickerClick(e) {
+    // Only for regular clicks
+    if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) {
+      return;
+    }
+
+    this.loadingSticker = true;
+  }
+
+  closeOverlay() {
+    this.loadingSticker = false;
   }
 
   get email() {

@@ -165,10 +165,22 @@
     </div>
     <div class="back">
       <template for:each={stickers} for:item="sticker">
-        <a key={sticker.id} href={sticker.href} class="sticker">
+        <a
+          key={sticker.id}
+          href={sticker.href}
+          class="sticker"
+          onclick={onStickerClick}
+        >
           <img src={sticker.imgSrc} alt={sticker.imgAlt} />
         </a>
       </template>
+    </div>
+  </div>
+  <div class="overlay" if:true={loadingSticker}>
+    <button class="overlay-close" onclick={closeOverlay}>Close ×</button>
+    <div class="overlay-content">
+      <span class="loading"></span>
+      <p>Loading another trading card</p>
     </div>
   </div>
 </template>
